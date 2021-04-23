@@ -1,0 +1,483 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title></title>
+  <icon>http://example.com/icon.png</icon>
+  <subtitle>星星之火可以燎原</subtitle>
+  <link href="http://example.com/atom.xml" rel="self"/>
+  
+  <link href="http://example.com/"/>
+  <updated>2021-04-23T11:30:38.657Z</updated>
+  <id>http://example.com/</id>
+  
+  <author>
+    <name>Gao zj</name>
+    
+  </author>
+  
+  <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>MySQL学习记录-五</title>
+    <link href="http://example.com/posts/mysql-family/"/>
+    <id>http://example.com/posts/mysql-family/</id>
+    <published>2020-11-10T14:46:30.000Z</published>
+    <updated>2021-04-23T11:30:38.657Z</updated>
+    
+    
+    
+    
+    
+    <category term="mysql" scheme="http://example.com/tags/mysql/"/>
+    
+    <category term="mvcc" scheme="http://example.com/tags/mvcc/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>MySQL学习记录-四</title>
+    <link href="http://example.com/posts/mysql-family/"/>
+    <id>http://example.com/posts/mysql-family/</id>
+    <published>2020-11-10T02:16:12.000Z</published>
+    <updated>2021-04-23T10:53:21.441Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1 id=&quot;深入理解Mysql事务隔离级别与锁机制&quot;&gt;&lt;a href=&quot;#深入理解Mysql事务隔离级别与锁机制&quot; class=&quot;headerlink&quot; title=&quot;深入理解Mysql事务隔离级别与锁机制&quot;&gt;&lt;/a&gt;深入理解Mysql事务隔离级别与锁机制&lt;/h1&gt;&lt;h2</summary>
+        
+      
+    
+    
+    
+    
+    <category term="mysql" scheme="http://example.com/tags/mysql/"/>
+    
+    <category term="事务" scheme="http://example.com/tags/%E4%BA%8B%E5%8A%A1/"/>
+    
+    <category term="锁" scheme="http://example.com/tags/%E9%94%81/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>MySQL学习记录-三</title>
+    <link href="http://example.com/posts/mysql-family/"/>
+    <id>http://example.com/posts/mysql-family/</id>
+    <published>2020-11-09T12:19:02.000Z</published>
+    <updated>2021-04-23T11:30:34.094Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1 id=&quot;分页查询优化&quot;&gt;&lt;a href=&quot;#分页查询优化&quot; class=&quot;headerlink&quot; title=&quot;分页查询优化&quot;&gt;&lt;/a&gt;&lt;font color=&quot;orange&quot;&gt;分页查询优化&lt;/font&gt;&lt;/h1&gt;&lt;figure class=&quot;highlight</summary>
+        
+      
+    
+    
+    
+    
+    <category term="性能调优" scheme="http://example.com/tags/%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/"/>
+    
+    <category term="mysql" scheme="http://example.com/tags/mysql/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>MySQL学习记录-二</title>
+    <link href="http://example.com/posts/mysql-family/"/>
+    <id>http://example.com/posts/mysql-family/</id>
+    <published>2020-11-08T03:46:01.000Z</published>
+    <updated>2021-04-23T11:30:27.697Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h3 id=&quot;示例表&quot;&gt;&lt;a href=&quot;#示例表&quot; class=&quot;headerlink&quot; title=&quot;示例表&quot;&gt;&lt;/a&gt;示例表&lt;/h3&gt;&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td</summary>
+        
+      
+    
+    
+    
+    
+    <category term="性能调优" scheme="http://example.com/tags/%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/"/>
+    
+    <category term="mysql" scheme="http://example.com/tags/mysql/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>MySQL学习记录 一</title>
+    <link href="http://example.com/posts/mysql-family/"/>
+    <id>http://example.com/posts/mysql-family/</id>
+    <published>2020-11-07T12:19:51.000Z</published>
+    <updated>2021-04-23T11:30:42.866Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;Tipes : 艾宾浩斯记忆曲线：5分钟、30分钟、12小时、1天、2天、4天、7天、15天&lt;/p&gt;
+&lt;h3 id=&quot;Explain-索引优化实践&quot;&gt;&lt;a href=&quot;#Explain-索引优化实践&quot; class=&quot;headerlink&quot; title=&quot;Explain</summary>
+        
+      
+    
+    
+    
+    
+    <category term="性能调优" scheme="http://example.com/tags/%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/"/>
+    
+    <category term="mysql" scheme="http://example.com/tags/mysql/"/>
+    
+    <category term="索引" scheme="http://example.com/tags/%E7%B4%A2%E5%BC%95/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Redis学习-三</title>
+    <link href="http://example.com/posts/redis-family/"/>
+    <id>http://example.com/posts/redis-family/</id>
+    <published>2020-11-05T00:51:40.000Z</published>
+    <updated>2021-04-23T11:30:57.924Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h3 id=&quot;1、Redis集群方案比较&quot;&gt;&lt;a href=&quot;#1、Redis集群方案比较&quot; class=&quot;headerlink&quot; title=&quot;1、Redis集群方案比较&quot;&gt;&lt;/a&gt;1、Redis集群方案比较&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;font</summary>
+        
+      
+    
+    
+    
+    
+    <category term="redis" scheme="http://example.com/tags/redis/"/>
+    
+    <category term="哨兵" scheme="http://example.com/tags/%E5%93%A8%E5%85%B5/"/>
+    
+    <category term="集群" scheme="http://example.com/tags/%E9%9B%86%E7%BE%A4/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>JVM调优工具（一）</title>
+    <link href="http://example.com/posts/jvm-family/"/>
+    <id>http://example.com/posts/jvm-family/</id>
+    <published>2020-11-02T05:51:24.000Z</published>
+    <updated>2021-04-23T11:31:08.434Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h3 id=&quot;前置启动程序&quot;&gt;&lt;a href=&quot;#前置启动程序&quot; class=&quot;headerlink&quot; title=&quot;前置启动程序&quot;&gt;&lt;/a&gt;前置启动程序&lt;/h3&gt;&lt;p&gt;事先启动一个web应用程序，用jps 查看进程id，接着用各种jdk 自带命令优化应用&lt;/p&gt;
+&lt;h3</summary>
+        
+      
+    
+    
+    
+    
+    <category term="jvm" scheme="http://example.com/tags/jvm/"/>
+    
+    <category term="性能调优" scheme="http://example.com/tags/%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Redis-学习记录(二)</title>
+    <link href="http://example.com/posts/redis-family/"/>
+    <id>http://example.com/posts/redis-family/</id>
+    <published>2020-11-02T02:11:10.000Z</published>
+    <updated>2021-04-23T11:31:01.915Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h3 id=&quot;Redis-持久化&quot;&gt;&lt;a href=&quot;#Redis-持久化&quot; class=&quot;headerlink&quot; title=&quot;Redis 持久化&quot;&gt;&lt;/a&gt;Redis 持久化&lt;/h3&gt;&lt;h4 id=&quot;RDB-快照&quot;&gt;&lt;a href=&quot;#RDB-快照&quot;</summary>
+        
+      
+    
+    
+    
+    
+    <category term="redis" scheme="http://example.com/tags/redis/"/>
+    
+    <category term="哨兵" scheme="http://example.com/tags/%E5%93%A8%E5%85%B5/"/>
+    
+    <category term="持久化" scheme="http://example.com/tags/%E6%8C%81%E4%B9%85%E5%8C%96/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Redis 学习记录(一)</title>
+    <link href="http://example.com/posts/redis-family/"/>
+    <id>http://example.com/posts/redis-family/</id>
+    <published>2020-10-31T04:35:58.000Z</published>
+    <updated>2021-04-23T11:31:05.297Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h3 id=&quot;一、Redis-基础安装&quot;&gt;&lt;a href=&quot;#一、Redis-基础安装&quot; class=&quot;headerlink&quot; title=&quot;一、Redis 基础安装&quot;&gt;&lt;/a&gt;一、Redis</summary>
+        
+      
+    
+    
+    
+    
+    <category term="redis" scheme="http://example.com/tags/redis/"/>
+    
+    <category term="安装" scheme="http://example.com/tags/%E5%AE%89%E8%A3%85/"/>
+    
+    <category term="场景" scheme="http://example.com/tags/%E5%9C%BA%E6%99%AF/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>String事务学习记录</title>
+    <link href="http://example.com/posts/19251/"/>
+    <id>http://example.com/posts/19251/</id>
+    <published>2020-10-09T12:06:26.000Z</published>
+    <updated>2021-04-23T09:15:54.136Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;入口：&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td</summary>
+        
+      
+    
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>SpringIoC 学习总结</title>
+    <link href="http://example.com/posts/41821/"/>
+    <id>http://example.com/posts/41821/</id>
+    <published>2020-09-28T01:19:46.000Z</published>
+    <updated>2021-04-23T09:15:54.134Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h3 id=&quot;前置知识：&quot;&gt;&lt;a href=&quot;#前置知识：&quot; class=&quot;headerlink&quot; title=&quot;前置知识：&quot;&gt;&lt;/a&gt;前置知识：&lt;/h3&gt;&lt;p&gt;java 编程基础：&lt;a</summary>
+        
+      
+    
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>设计模式-原型模式</title>
+    <link href="http://example.com/posts/41018/"/>
+    <id>http://example.com/posts/41018/</id>
+    <published>2020-09-23T06:22:39.000Z</published>
+    <updated>2021-04-23T09:15:54.147Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;原型模式&quot;&gt;&lt;a href=&quot;#原型模式&quot; class=&quot;headerlink&quot; title=&quot;原型模式&quot;&gt;&lt;/a&gt;原型模式&lt;/h2&gt;&lt;h2 id=&quot;Prototype&quot;&gt;&lt;a href=&quot;#Prototype&quot; class=&quot;headerlink&quot;</summary>
+        
+      
+    
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>设计模式-建造者模式</title>
+    <link href="http://example.com/posts/48428/"/>
+    <id>http://example.com/posts/48428/</id>
+    <published>2020-09-23T03:50:05.000Z</published>
+    <updated>2021-04-23T09:15:54.151Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;创造者模式&quot;&gt;&lt;a href=&quot;#创造者模式&quot; class=&quot;headerlink&quot; title=&quot;创造者模式&quot;&gt;&lt;/a&gt;创造者模式&lt;/h2&gt;&lt;h3 id=&quot;模式定义：&quot;&gt;&lt;a href=&quot;#模式定义：&quot; class=&quot;headerlink&quot;</summary>
+        
+      
+    
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>设计模式-抽象工厂模式</title>
+    <link href="http://example.com/posts/17952/"/>
+    <id>http://example.com/posts/17952/</id>
+    <published>2020-09-23T03:02:34.000Z</published>
+    <updated>2021-04-23T09:15:54.153Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;抽象工厂模式&quot;&gt;&lt;a href=&quot;#抽象工厂模式&quot; class=&quot;headerlink&quot; title=&quot;抽象工厂模式&quot;&gt;&lt;/a&gt;抽象工厂模式&lt;/h2&gt;&lt;p&gt;Abstract Factory&lt;/p&gt;
+&lt;h3 id=&quot;模式定义&quot;&gt;&lt;a href=&quot;#模式定义&quot;</summary>
+        
+      
+    
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>工作问题之图片设置背景图片为透明色</title>
+    <link href="http://example.com/posts/55220/"/>
+    <id>http://example.com/posts/55220/</id>
+    <published>2020-09-23T02:41:51.000Z</published>
+    <updated>2021-04-23T09:15:54.141Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h3 id=&quot;图片切换成透明背景图&quot;&gt;&lt;a href=&quot;#图片切换成透明背景图&quot; class=&quot;headerlink&quot;</summary>
+        
+      
+    
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>设计模式-工厂方法模式</title>
+    <link href="http://example.com/posts/58121/"/>
+    <id>http://example.com/posts/58121/</id>
+    <published>2020-09-23T01:08:48.000Z</published>
+    <updated>2021-04-23T09:15:54.152Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;工厂方法模式&quot;&gt;&lt;a href=&quot;#工厂方法模式&quot; class=&quot;headerlink&quot; title=&quot;工厂方法模式&quot;&gt;&lt;/a&gt;工厂方法模式&lt;/h2&gt;&lt;h2 id=&quot;Factory-Method&quot;&gt;&lt;a href=&quot;#Factory-Method&quot;</summary>
+        
+      
+    
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>设计模式-单例设计模式</title>
+    <link href="http://example.com/posts/63671/"/>
+    <id>http://example.com/posts/63671/</id>
+    <published>2020-09-21T01:10:16.000Z</published>
+    <updated>2021-04-23T09:15:54.150Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;Singleton&quot;&gt;&lt;a href=&quot;#Singleton&quot; class=&quot;headerlink&quot;</summary>
+        
+      
+    
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Java 自动发送邮件</title>
+    <link href="http://example.com/posts/34160/"/>
+    <id>http://example.com/posts/34160/</id>
+    <published>2020-09-16T05:37:23.000Z</published>
+    <updated>2021-04-23T09:15:54.121Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h3 id=&quot;Java-代码实现自动发送邮件的功能&quot;&gt;&lt;a href=&quot;#Java-代码实现自动发送邮件的功能&quot; class=&quot;headerlink&quot; title=&quot;Java 代码实现自动发送邮件的功能&quot;&gt;&lt;/a&gt;&lt;em&gt;Java&lt;/em&gt;</summary>
+        
+      
+    
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Spring源码学习记录</title>
+    <link href="http://example.com/posts/28732/"/>
+    <id>http://example.com/posts/28732/</id>
+    <published>2020-09-14T01:51:29.000Z</published>
+    <updated>2021-04-23T09:15:54.168Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h3 id=&quot;Spring-源码介绍和编译&quot;&gt;&lt;a href=&quot;#Spring-源码介绍和编译&quot; class=&quot;headerlink&quot; title=&quot;Spring 源码介绍和编译&quot;&gt;&lt;/a&gt;&lt;em&gt;Spring&lt;/em&gt;</summary>
+        
+      
+    
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Java8新特性探索记录</title>
+    <link href="http://example.com/posts/12882/"/>
+    <id>http://example.com/posts/12882/</id>
+    <published>2020-09-08T01:05:32.000Z</published>
+    <updated>2021-04-23T09:15:54.127Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h3 id=&quot;写本篇文章的由来&quot;&gt;&lt;a href=&quot;#写本篇文章的由来&quot; class=&quot;headerlink&quot; title=&quot;写本篇文章的由来?&quot;&gt;&lt;/a&gt;写本篇文章的由来?&lt;/h3&gt;&lt;blockquote&gt;
+&lt;p&gt;最近有看到关于&lt;em&gt;Java8&lt;/em&gt;</summary>
+        
+      
+    
+    
+    
+    
+  </entry>
+  
+</feed>
