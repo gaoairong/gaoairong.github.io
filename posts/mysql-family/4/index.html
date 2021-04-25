@@ -1,0 +1,268 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>MySQL学习记录-四 | </title><meta name="keywords" content="mysql,事务,锁"><meta name="author" content="Gao zj"><meta name="copyright" content="Gao zj"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="深入理解Mysql事务隔离级别与锁机制概述我们的数据库一般都会并发执行多个事务，多个事务可能会并发的对相同的一批数据进行增删改查操作，可能就会导致我们说的脏写、脏读、不可重复读、幻读这些问题。这些问题的本质都是数据库的多事务并发问题，为了解决多事务并发问题，数据库设计了事务隔离机制、锁机制、MVCC多版本并发控制隔离机制，用一整套机制来解决多事务并发问题。接下来，我们会深入讲解这些机制，让大家彻底">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MySQL学习记录-四">
+<meta property="og:url" content="http://example.com/posts/mysql-family/4/index.html">
+<meta property="og:site_name">
+<meta property="og:description" content="深入理解Mysql事务隔离级别与锁机制概述我们的数据库一般都会并发执行多个事务，多个事务可能会并发的对相同的一批数据进行增删改查操作，可能就会导致我们说的脏写、脏读、不可重复读、幻读这些问题。这些问题的本质都是数据库的多事务并发问题，为了解决多事务并发问题，数据库设计了事务隔离机制、锁机制、MVCC多版本并发控制隔离机制，用一整套机制来解决多事务并发问题。接下来，我们会深入讲解这些机制，让大家彻底">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/bg-mysql.jpg">
+<meta property="article:published_time" content="2020-11-10T02:16:12.000Z">
+<meta property="article:modified_time" content="2021-04-25T01:43:22.243Z">
+<meta property="article:author" content="Gao zj">
+<meta property="article:tag" content="mysql">
+<meta property="article:tag" content="事务">
+<meta property="article:tag" content="锁">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/bg-mysql.jpg"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/posts/mysql-family/4/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#121212","position":"top-right"},
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2021-04-25 09:43:22'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><div class="aplayer" data-id="797214285" data-server="netease" data-type="playlist" data-fixed="true" data-listFolded="false" data-order="random" data-preload="none"></div><link rel="stylesheet" href="https://cdn.bootcss.com/aplayer/1.10.1/APlayer.min.css"><script src="https://cdn.bootcss.com/aplayer/1.10.1/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/meting@1.2.0/dist/Meting.min.js"></script><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    })(window)</script><link rel="stylesheet" href="/css/background.css"><link rel="stylesheet" href="/css/VolantisTags.css"><link rel="stylesheet" href="/css/mycss.css"><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="" type="application/atom+xml">
+</head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="/img/loading.gif" data-original="/img/avatar.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">29</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">20</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/messageboard/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/timeline/"><i class="fa-fw fa fa-bell"></i><span> 日志</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fa fa-list"></i><span> 菜单</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/%E5%85%B3%E4%BA%8E"><i class="fa-fw /about/"></i><span> 0</span></a></li><li><a class="site-page child" href="/myself"><i class="fa-fw /myself/"></i><span> 1</span></a></li><li><a class="site-page child" href="/butterfly%E4%B8%BB%E9%A2%98"><i class="fa-fw https://github.com/jerryc127/hexo-theme-butterfly/"></i><span> 2</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/bg-mysql.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/"></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/messageboard/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/timeline/"><i class="fa-fw fa fa-bell"></i><span> 日志</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fa fa-list"></i><span> 菜单</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/%E5%85%B3%E4%BA%8E"><i class="fa-fw /about/"></i><span> 0</span></a></li><li><a class="site-page child" href="/myself"><i class="fa-fw /myself/"></i><span> 1</span></a></li><li><a class="site-page child" href="/butterfly%E4%B8%BB%E9%A2%98"><i class="fa-fw https://github.com/jerryc127/hexo-theme-butterfly/"></i><span> 2</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">MySQL学习记录-四</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2020-11-10T02:16:12.000Z" title="发表于 2020-11-10 10:16:12">2020-11-10</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2021-04-25T01:43:22.243Z" title="更新于 2021-04-25 09:43:22">2021-04-25</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="MySQL学习记录-四"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="深入理解Mysql事务隔离级别与锁机制"><a href="#深入理解Mysql事务隔离级别与锁机制" class="headerlink" title="深入理解Mysql事务隔离级别与锁机制"></a>深入理解Mysql事务隔离级别与锁机制</h1><h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>我们的数据库一般都会并发执行多个事务，多个事务可能会并发的对相同的一批数据进行增删改查操作，可能就会导致我们说的脏写、脏读、不可重复读、幻读这些问题。<br>这些问题的本质都是数据库的多事务并发问题，为了解决多事务并发问题，数据库设计了<strong>事务隔离机制、锁机制、MVCC多版本并发控制隔离机制</strong>，用一整套机制来<strong>解决多事务并发问题</strong>。接下来，我们会深入讲解这些机制，让大家彻底理解数据库内部的执行原理。</p>
+<h2 id="事务及其ACID属性"><a href="#事务及其ACID属性" class="headerlink" title="事务及其ACID属性"></a>事务及其ACID属性</h2><p>事务是由一组SQL语句组成的逻辑处理单元,事务具有以下4个属性,通常简称为事务的ACID属性。</p>
+<ul>
+<li>原子性(Atomicity) ：事务是一个原子操作单元,其对数据的修改,要么全都执行,要么全都不执行。</li>
+<li>一致性(Consistent) ：在事务开始和完成时,数据都必须保持一致状态。这意味着所有相关的数据规则都必须应用于事务的修改,以保持数据的完整性。</li>
+<li>隔离性(Isolation) ：数据库系统提供一定的隔离机制,保证事务在不受外部并发操作影响的“独立”环境执行。这意味着事务处理过程中的中间状态对外部是不可见的,反之亦然。</li>
+<li>持久性(Durable) ：事务完成之后,它对于数据的修改是永久性的,即使出现系统故障也能够保持。</li>
+</ul>
+<h2 id="并发事务处理带来的问题"><a href="#并发事务处理带来的问题" class="headerlink" title="并发事务处理带来的问题"></a>并发事务处理带来的问题</h2><p>　　<font color="red">更新丢失(Lost Update)或脏写</font><br>　　当两个或多个事务选择同一行，然后基于最初选定的值更新该行时，由于每个事务都不知道其他事务的存在，就会发生丢失更新问题–<strong>最后的更新覆盖了由其他事务所做的更新</strong>。<br>　　<font color="red">脏读（Dirty Reads）</font><br>　　一个事务正在对一条记录做修改，在这个事务完成并提交前，这条记录的数据就处于不一致的状态；这时，另一个事务也来读取同一条记录，如果不加控制，第二个事务读取了这些“脏”数据，并据此作进一步的处理，就会产生未提交的数据依赖关系。这种现象被形象的叫做“脏读”。<br>　　一句话：<strong>事务A读取到了事务B已经修改但尚未提交的数据</strong>，还在这个数据基础上做了操作。此时，如果B事务回滚，A读取的数据无效，不符合一致性要求。<br>　　<font color="red">不可重读（Non-Repeatable Reads）</font><br>　　一个事务在读取某些数据后的某个时间，再次读取以前读过的数据，却发现其读出的数据已经发生了改变、或某些记录已经被删除了！这种现象就叫做“不可重复读”。<br>　　一句话：<strong>事务A内部的相同查询语句在不同时刻读出的结果不一致，不符合隔离性</strong><br>　　<font color="red">幻读（Phantom Reads）</font><br>　　一个事务按相同的查询条件重新读取以前检索过的数据，却发现其他事务插入了满足其查询条件的新数据，这种现象就称为“幻读”。<br>　　一句话：<strong>事务A读取到了事务B提交的新增数据，不符合隔离性</strong></p>
+<h2 id="事务隔离级别"><a href="#事务隔离级别" class="headerlink" title="事务隔离级别"></a>事务隔离级别</h2><p>“脏读”、“不可重复读”和“幻读”,其实都是数据库读一致性问题,必须由数据库提供一定的事务隔离机制来解决。</p>
+<p><img src="/img/loading.gif" data-original="/images/mysql4/mysql-1.png" alt="mysql"></p>
+<p>数据库的事务隔离越严格,并发副作用越小,但付出的代价也就越大,因为事务隔离实质上就是使事务在一定程度上“串行化”进行,这显然与“并发”是矛盾的。<br>同时,不同的应用对读一致性和事务隔离程度的要求也是不同的,比如许多应用对“不可重复读”和“幻读”并不敏感,可能更关心数据并发访问的能力。<br><strong>常看当前数据库的事务隔离级别: show variables like ‘tx_isolation’;<br>设置事务隔离级别：set tx_isolation=’REPEATABLE-READ’;<br>Mysql默认的事务隔离级别是可重复读，用Spring开发程序时，如果不设置隔离级别默认用Mysql设置的隔离级别，如果Spring设置了就用已经设置的隔离级别</strong></p>
+<h2 id="锁详解"><a href="#锁详解" class="headerlink" title="锁详解"></a>锁详解</h2><p>锁是计算机协调多个进程或线程并发访问某一资源的机制。<br>在数据库中，除了传统的计算资源（如CPU、RAM、I/O等）的争用以外，数据也是一种供需要用户共享的资源。如何保证数据并发访问的一致性、有效性是所有数据库必须解决的一个问题，锁冲突也是影响数据库并发访问性能的一个重要因素。</p>
+<h2 id="锁分类"><a href="#锁分类" class="headerlink" title="锁分类"></a>锁分类</h2><ul>
+<li>从性能上分为<font color="red">乐观锁</font>(用版本对比来实现)和<font color="red">悲观锁</font></li>
+<li>从对数据库操作的类型分，分为<font color="red">读锁和写锁</font>(都属于悲观锁)<br>读锁（共享锁，S锁(Shared)）：针对同一份数据，多个读操作可以同时进行而不会互相影响<br>写锁（排它锁，X锁(eXclusive)）：当前写操作没有完成前，它会阻断其他写锁和读锁</li>
+<li>从对数据操作的粒度分，分为<font color="red">表锁和行锁</font></li>
+</ul>
+<h2 id="表锁"><a href="#表锁" class="headerlink" title="表锁"></a>表锁</h2><p>每次操作锁住整张表。开销小，加锁快；不会出现死锁；锁定粒度大，发生锁冲突的概率最高，并发度最低；一般用在整表数据迁移的场景。</p>
+<h2 id="基本操作"><a href="#基本操作" class="headerlink" title="基本操作"></a>基本操作</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"># 建表SQL</span><br><span class="line">CREATE TABLE &#96;mylock&#96; (</span><br><span class="line">	&#96;id&#96; INT (11) NOT NULL AUTO_INCREMENT,</span><br><span class="line">	&#96;NAME&#96; VARCHAR (20) DEFAULT NULL,</span><br><span class="line">	PRIMARY KEY (&#96;id&#96;)</span><br><span class="line">) ENGINE &#x3D; MyISAM DEFAULT CHARSET &#x3D; utf8;</span><br><span class="line"></span><br><span class="line"># 插入数据</span><br><span class="line">INSERT INTO&#96;test&#96;.&#96;mylock&#96; (&#96;id&#96;, &#96;NAME&#96;) VALUES (&#39;1&#39;, &#39;a&#39;);</span><br><span class="line">INSERT INTO&#96;test&#96;.&#96;mylock&#96; (&#96;id&#96;, &#96;NAME&#96;) VALUES (&#39;2&#39;, &#39;b&#39;);</span><br><span class="line">INSERT INTO&#96;test&#96;.&#96;mylock&#96; (&#96;id&#96;, &#96;NAME&#96;) VALUES (&#39;3&#39;, &#39;c&#39;);</span><br><span class="line">INSERT INTO&#96;test&#96;.&#96;mylock&#96; (&#96;id&#96;, &#96;NAME&#96;) VALUES (&#39;4&#39;, &#39;d&#39;);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>手动增加表锁<br><font color="navy">lock table</font> 表名称 <font color="navy">read(write)</font>,表名称2 <font color="navy">read(write)</font>;</li>
+<li>查看表上加过的锁<br><font color="navy">show open</font> tables;</li>
+<li>删除表锁<br>unlock tables;</li>
+</ul>
+<p><strong>案例分析(加读锁）</strong></p>
+<p><img src="/img/loading.gif" data-original="/images/mysql4/mysql-2.png" alt="mysql"></p>
+<p><img src="/img/loading.gif" data-original="/images/mysql4/mysql-3.png" alt="mysql"></p>
+<p>当前session和其他session都可以读该表<br>当前session中插入或者更新锁定的表都会报错，其他session插入或更新则会等待</p>
+<p><strong>案例分析(加写锁）</strong></p>
+<p><img src="/img/loading.gif" data-original="/images/mysql4/mysql-4.png" alt="mysql"></p>
+<p><img src="/img/loading.gif" data-original="/images/mysql4/mysql-5.png" alt="mysql"></p>
+<p>当前session对该表的增删改查都没有问题，其他session对该表的所有操作被阻塞</p>
+<p><strong>案例结论</strong></p>
+<p>1、对MyISAM表的读操作(加读锁) ,不会阻寒其他进程对同一表的读请求,但会阻赛对同一表的写请求。只有当读锁释放后,才会执行其它进程的写操作。<br>2、对MylSAM表的写操作(加写锁) ,会阻塞其他进程对同一表的读和写操作,只有当写锁释放后,才会执行其它进程的读写操作</p>
+<p><strong>行锁</strong></p>
+<p>每次操作锁住一行数据。开销大，加锁慢；会出现死锁；锁定粒度最小，发生锁冲突的概率最低，并发度最高。<br>InnoDB与MYISAM的最大不同有两点：</p>
+<ul>
+<li><strong>InnoDB支持事务（TRANSACTION）</strong></li>
+<li><strong>InnoDB支持行级锁</strong></li>
+</ul>
+<p><strong>行锁演示</strong></p>
+<p>一个session开启事务更新不提交，另一个session更新同一条记录会阻塞，更新不同记录不会阻塞</p>
+<p><strong>总结：</strong></p>
+<p><font color="red">MyISAM在执行查询语句SELECT前，会自动给涉及的所有表加读锁,在执行update、insert、delete操作会自动给涉及的表加写锁。<br>InnoDB在执行查询语句SELECT时(非串行隔离级别)，不会加锁。但是update、insert、delete操作会加行锁。</font><br>简而言之，就是<font color="red"><strong>读锁会阻塞写，但是不会阻塞读。而写锁则会把读和写都阻塞</strong></font>。</p>
+<h2 id="行锁与事务隔离级别案例分析"><a href="#行锁与事务隔离级别案例分析" class="headerlink" title="行锁与事务隔离级别案例分析"></a>行锁与事务隔离级别案例分析</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">create table account</span><br><span class="line">(</span><br><span class="line">id int primary key auto_increment,</span><br><span class="line">name varchar(30) default null,</span><br><span class="line">balance int default null</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line">insert into account values(1,&#39;lilei&#39;,&#39;450&#39;);</span><br><span class="line">insert into account(name,balance) values(&#39;hanmei&#39;,&#39;16000&#39;);</span><br><span class="line">insert into account values(null,&#39;lucy&#39;,&#39;2400&#39;);</span><br></pre></td></tr></table></figure>
+
+<p><strong>2、读未提交：</strong></p>
+<p>（1）打开一个客户端A，并设置当前事务模式为read uncommitted（未提交读），查询表account的初始值：<br><font color="red">set tx_isolation=’read-uncommitted’;</font></p>
+<p><img src="/img/loading.gif" data-original="/images/mysql4/mysql-6.png" alt="mysql"></p>
+<p>（2）在客户端A的事务提交之前，打开另一个客户端B，更新表account：</p>
+<p><img src="/img/loading.gif" data-original="/images/mysql4/mysql-7.png" alt="mysql"></p>
+<p>（3）这时，虽然客户端B的事务还没提交，但是客户端A就可以查询到B已经更新的数据： </p>
+<p><img src="/img/loading.gif" data-original="/images/mysql4/mysql-8.png" alt="mysql"></p>
+<p>（4）一旦客户端B的事务因为某种原因回滚，所有的操作都将会被撤销，那客户端A查询到的数据其实就是<strong>脏数据</strong>：</p>
+<p><img src="/img/loading.gif" data-original="/images/mysql4/mysql-9.png" alt="mysql"></p>
+<p>（5）在客户端A执行更新语句update account set balance = balance - 50 where id =1，lilei的balance没有变成350，居然是400，是不是很奇怪，数据不一致啊，<font color="red">如果你这么想就太天真了，在应用程序中，我们会用400-50=350，并不知道其他会话回滚了，要想解决这个问题可以采用读已提交的隔离级别</font></p>
+<p><img src="/img/loading.gif" data-original="/images/mysql4/mysql-10.png" alt="mysql"></p>
+<p><strong>3、读已提交</strong></p>
+<p>（1）打开一个客户端A，并设置当前事务模式为read committed（未提交读），查询表account的所有记录：<br><font color="red">set tx_isolation=’read-committed’;</font></p>
+<p><img src="/img/loading.gif" data-original="/images/mysql4/mysql-11.png" alt="mysql"></p>
+<p>（2）在客户端A的事务提交之前，打开另一个客户端B，更新表account： </p>
+<p><img src="/img/loading.gif" data-original="/images/mysql4/mysql-12.png" alt="mysql"></p>
+<p>（3）这时，客户端B的事务还没提交，客户端A不能查询到B已经更新的数据，<font color="red">解决了脏读问题</font>： </p>
+<p><img src="/img/loading.gif" data-original="/images/mysql4/mysql-13.png" alt="mysql"></p>
+<p>（4）客户端B的事务提交</p>
+<p><img src="/img/loading.gif" data-original="/images/mysql4/mysql-14.png" alt="mysql"></p>
+<p>（5）客户端A执行与上一步相同的查询，结果 与上一步不一致，即产生了不可重复读的问题</p>
+<p><img src="/img/loading.gif" data-original="/images/mysql4/mysql-15.png" alt="mysql"></p>
+<p><strong>4、可重复读</strong></p>
+<p>（1）打开一个客户端A，并设置当前事务模式为repeatable read，查询表account的所有记录<br><font color="red">set tx_isolation=’repeatable-read’;</font></p>
+<p><img src="/img/loading.gif" data-original="/images/mysql4/mysql-16.png" alt="mysql"></p>
+<p>（2）在客户端A的事务提交之前，打开另一个客户端B，更新表account并提交</p>
+<p><img src="/img/loading.gif" data-original="/images/mysql4/mysql-17.png" alt="mysql"></p>
+<p>（3）在客户端A查询表account的所有记录，与步骤（1）查询结果一致，没有出现不可重复读的问题</p>
+<p><img src="/img/loading.gif" data-original="/images/mysql4/mysql-18.png" alt="mysql"></p>
+<p><font color="red">（4）在客户端A，接着执行update account set balance = balance - 50 where id = 1，balance没有变成400-50=350，lilei的balance值用的是步骤2中的350来算的，所以是300，数据的一致性倒是没有被破坏。可重复读的隔离级别下使用了MVCC(multi-version concurrency control)机制，select操作不会更新版本号，是快照读（历史版本）；insert、update和delete会更新版本号，是当前读（当前版本）。</font></p>
+<p><img src="/img/loading.gif" data-original="/images/mysql4/mysql-19.png" alt="mysql"></p>
+<p>（5）重新打开客户端B，插入一条新数据后提交</p>
+<p><img src="/img/loading.gif" data-original="/images/mysql4/mysql-20.png" alt="mysql"></p>
+<p>（6）在客户端A查询表account的所有记录，没有查出新增数据，所以没有出现幻读</p>
+<p><img src="/img/loading.gif" data-original="/images/mysql4/mysql-21.png" alt="mysql"></p>
+<p>（7)验证幻读<br>在客户端A执行update account set balance=888 where id = 4;能更新成功，再次查询能查到客户端B新增的数据</p>
+<p><img src="/img/loading.gif" data-original="/images/mysql4/mysql-22.png" alt="mysql"></p>
+<p><strong>5、串行化</strong></p>
+<p>（1）打开一个客户端A，并设置当前事务模式为serializable，查询表account的初始值：<br><font color="red">set tx_isolation=’serializable’;</font></p>
+<p><img src="/img/loading.gif" data-original="/images/mysql4/mysql-23.png" alt="mysql"></p>
+<p>（2）打开一个客户端B，并设置当前事务模式为serializable，更新相同的id为1的记录会被阻塞等待，更新id为2的记录可以成功，说明在串行模式下innodb的查询也会被加上行锁。<br>如果客户端A执行的是一个范围查询，那么该<strong>范围内的所有行包括每行记录所在的间隙区间范围</strong>(就算该行数据还未被插入也会加锁，这种是间隙锁)<strong>都会被加锁</strong>。此时如果客户端B在该范围内插入数据都会被阻塞，所以就避免了幻读。<br><font color="red">这种隔离级别并发性极低，开发中很少会用到。</font></p>
+<p><img src="/img/loading.gif" data-original="/images/mysql4/mysql-24.png" alt="mysql"></p>
+<h2 id="间隙锁-Gap-Lock"><a href="#间隙锁-Gap-Lock" class="headerlink" title="间隙锁(Gap Lock)"></a>间隙锁(Gap Lock)</h2><p>间隙锁，锁的就是两个值之间的空隙。Mysql默认级别是repeatable-read，有办法解决幻读问题吗？间隙锁在某些情况下可以解决幻读问题。<br>假设account表里数据如下：</p>
+<p><img src="/img/loading.gif" data-original="/images/mysql4/mysql-25.png" alt="mysql"></p>
+<p>那么间隙就有 id 为 (3,10)，(10,20)，(20,正无穷) 这三个区间，<br>在Session_1下面执行 update account set name = ‘gac’ where id &gt; 8 and id &lt;18;，则其他Session没法在这个<strong>范围所包含的所有行记录(包括间隙行记录)以及行记录所在的间隙</strong>里插入或修改任何数据，即id在(3,20]区间都无法修改数据，注意最后那个20也是包含在内的。<br><strong>间隙锁是在可重复读隔离级别下才会生效。</strong></p>
+<h2 id="临键锁-Next-key-Locks"><a href="#临键锁-Next-key-Locks" class="headerlink" title="临键锁(Next-key Locks)"></a>临键锁(Next-key Locks)</h2><p>Next-Key Locks是行锁与间隙锁的组合。像上面那个例子里的这个(3,20]的整个区间可以叫做临键锁。</p>
+<p><strong>无索引行锁会升级为表锁(RR级别会升级为表锁，RC级别不会升级为表锁)</strong><br>锁主要是加在索引上，如果对非索引字段更新，行锁可能会变表锁<br>session1 执行：update account set balance = 800 where name = ‘lilei’;<br>session2 对该表任一行操作都会阻塞住<br><font color="red">InnoDB的行锁是针对索引加的锁，不是针对记录加的锁。并且该索引不能失效，否则都会从行锁升级为表锁</font>。</p>
+<p>锁定某一行还可以用lock in share mode(共享锁) 和for update(排它锁)，例如：select * from test_innodb_lock where a = 2 for update; 这样其他session只能读这行数据，修改则会被阻塞，直到锁定行的session提交</p>
+<p><strong>结论</strong></p>
+<p>Innodb存储引擎由于实现了行级锁定，虽然在锁定机制的实现方面所带来的性能损耗可能比表级锁定会要更高一下，但是在整体并发处理能力方面要远远优于MYISAM的表级锁定的。当系统并发量高的时候，Innodb的整体性能和MYISAM相比就会有比较明显的优势了。<br>但是，Innodb的行级锁定同样也有其脆弱的一面，当我们使用不当的时候，可能会让Innodb的整体性能表现不仅不能比MYISAM高，甚至可能会更差。</p>
+<p><strong>行锁分析</strong></p>
+<p>通过检查InnoDB_row_lock状态变量来分析系统上的行锁的争夺情况</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">show status like &#39;innodb_row_lock%&#39;;</span><br></pre></td></tr></table></figure>
+
+<p>对各个状态量的说明如下：<br>Innodb_row_lock_current_waits: 当前正在等待锁定的数量<br>Innodb_row_lock_time: 从系统启动到现在锁定总时间长度<br>Innodb_row_lock_time_avg: 每次等待所花平均时间<br>Innodb_row_lock_time_max：从系统启动到现在等待最长的一次所花时间<br>Innodb_row_lock_waits: 系统启动后到现在总共等待的次数</p>
+<p>对于这5个状态变量，比较重要的主要是：<br><font color="red">Innodb_row_lock_time_avg （等待平均时长）<br>Innodb_row_lock_waits （等待总次数）<br>Innodb_row_lock_time（等待总时长）</font></p>
+<p>尤其是当等待次数很高，而且每次等待时长也不小的时候，我们就需要分析系统中为什么会有如此多的等待，然后根据分析结果着手制定优化计划。</p>
+<h2 id="查看INFORMATION-SCHEMA系统库锁相关数据表"><a href="#查看INFORMATION-SCHEMA系统库锁相关数据表" class="headerlink" title="查看INFORMATION_SCHEMA系统库锁相关数据表"></a>查看INFORMATION_SCHEMA系统库锁相关数据表</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">-- 查看事务</span><br><span class="line">select * from INFORMATION_SCHEMA.INNODB_TRX;</span><br><span class="line">-- 查看锁</span><br><span class="line">select * from INFORMATION_SCHEMA.INNODB_LOCKS;</span><br><span class="line">-- 查看锁等待</span><br><span class="line">select * from INFORMATION_SCHEMA.INNODB_LOCK_WAITS;</span><br><span class="line"></span><br><span class="line">-- 释放锁，trx_mysql_thread_id可以从INNODB_TRX表里查看到</span><br><span class="line">kill trx_mysql_thread_id</span><br><span class="line"></span><br><span class="line">-- 查看锁等待详细信息</span><br><span class="line">show engine innodb status\G; </span><br></pre></td></tr></table></figure>
+
+<p><strong>死锁</strong></p>
+<p><font color="red">set tx_isolation=’repeatable-read’;</font><br>Session_1执行：select * from account where id=1 for update;<br>Session_2执行：select * from account where id=2 for update;<br>Session_1执行：select * from account where id=2 for update;<br>Session_2执行：select * from account where id=1 for update;<br>查看近期死锁日志信息：show engine innodb status\G;<br>大多数情况mysql可以自动检测死锁并回滚产生死锁的那个事务，但是有些情况mysql没法自动检测死锁</p>
+<p><strong>锁优化建议</strong></p>
+<ul>
+<li>尽可能让所有数据检索都通过索引来完成，避免无索引行锁升级为表锁</li>
+<li>合理设计索引，尽量缩小锁的范围</li>
+<li>尽可能减少检索条件范围，避免间隙锁</li>
+<li>尽量控制事务大小，减少锁定资源量和时间长度，涉及事务加锁的sql尽量放在事务最后执行</li>
+<li>尽可能低级别事务隔离</li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">Gao zj</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/posts/mysql-family/4/">http://example.com/posts/mysql-family/4/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank"></a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/mysql/">mysql</a><a class="post-meta__tags" href="/tags/%E4%BA%8B%E5%8A%A1/">事务</a><a class="post-meta__tags" href="/tags/%E9%94%81/">锁</a></div><div class="post_share"><div class="social-share" data-image="/img/bg-mysql.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/posts/mysql-family/5/"><img class="prev-cover" src="/img/loading.gif" data-original="/img/bg-mysql.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">MySQL学习记录-五</div></div></a></div><div class="next-post pull-right"><a href="/posts/mysql-family/3/"><img class="next-cover" src="/img/loading.gif" data-original="/img/bg-mysql.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">MySQL学习记录-三</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span> 相关推荐</span></div><div class="relatedPosts-list"><div><a href="/posts/mysql-family/5/" title="MySQL学习记录-五"><img class="cover" src="/img/loading.gif" data-original="/img/bg-mysql.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-11-10</div><div class="title">MySQL学习记录-五</div></div></a></div><div><a href="/posts/mysql-family/1/" title="MySQL学习记录-一"><img class="cover" src="/img/loading.gif" data-original="/img/bg-mysql.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-11-07</div><div class="title">MySQL学习记录-一</div></div></a></div><div><a href="/posts/mysql-family/2/" title="MySQL学习记录-二"><img class="cover" src="/img/loading.gif" data-original="/img/bg-mysql.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-11-08</div><div class="title">MySQL学习记录-二</div></div></a></div><div><a href="/posts/mysql-family/3/" title="MySQL学习记录-三"><img class="cover" src="/img/loading.gif" data-original="/img/bg-mysql.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-11-09</div><div class="title">MySQL学习记录-三</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="card-info-avatar is-center"><img class="avatar-img" src="/img/loading.gif" data-original="/img/avatar.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/><div class="author-info__name">Gao zj</div><div class="author-info__description">南风知我意，吹梦到西洲</div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">29</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">标签</div><div class="length-num">20</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://gaoairong.github.io/"><i class="iconfont icon-CSDN"></i><span>Gao zj's Blog</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="/atom.xml" target="_blank" title="RSS链接"><i class="iconfont icon-rss card_icon"></i></a><a class="social-icon" href="tencent://AddContact/?fromId=45&amp;fromSubId=1&amp;subcmd=all&amp;uin=407599698@qq.com&amp;website=www.oicqzone.com" target="_blank" title=""><i class="iconfont icon-QQ card_icon"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">博客构建中，待续...</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Mysql%E4%BA%8B%E5%8A%A1%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB%E4%B8%8E%E9%94%81%E6%9C%BA%E5%88%B6"><span class="toc-number">1.</span> <span class="toc-text">深入理解Mysql事务隔离级别与锁机制</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A6%82%E8%BF%B0"><span class="toc-number">1.1.</span> <span class="toc-text">概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8B%E5%8A%A1%E5%8F%8A%E5%85%B6ACID%E5%B1%9E%E6%80%A7"><span class="toc-number">1.2.</span> <span class="toc-text">事务及其ACID属性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B9%B6%E5%8F%91%E4%BA%8B%E5%8A%A1%E5%A4%84%E7%90%86%E5%B8%A6%E6%9D%A5%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-number">1.3.</span> <span class="toc-text">并发事务处理带来的问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8B%E5%8A%A1%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB"><span class="toc-number">1.4.</span> <span class="toc-text">事务隔离级别</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%94%81%E8%AF%A6%E8%A7%A3"><span class="toc-number">1.5.</span> <span class="toc-text">锁详解</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%94%81%E5%88%86%E7%B1%BB"><span class="toc-number">1.6.</span> <span class="toc-text">锁分类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A1%A8%E9%94%81"><span class="toc-number">1.7.</span> <span class="toc-text">表锁</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C"><span class="toc-number">1.8.</span> <span class="toc-text">基本操作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A1%8C%E9%94%81%E4%B8%8E%E4%BA%8B%E5%8A%A1%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB%E6%A1%88%E4%BE%8B%E5%88%86%E6%9E%90"><span class="toc-number">1.9.</span> <span class="toc-text">行锁与事务隔离级别案例分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%B4%E9%9A%99%E9%94%81-Gap-Lock"><span class="toc-number">1.10.</span> <span class="toc-text">间隙锁(Gap Lock)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%B4%E9%94%AE%E9%94%81-Next-key-Locks"><span class="toc-number">1.11.</span> <span class="toc-text">临键锁(Next-key Locks)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8BINFORMATION-SCHEMA%E7%B3%BB%E7%BB%9F%E5%BA%93%E9%94%81%E7%9B%B8%E5%85%B3%E6%95%B0%E6%8D%AE%E8%A1%A8"><span class="toc-number">1.12.</span> <span class="toc-text">查看INFORMATION_SCHEMA系统库锁相关数据表</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/posts/es-family/2/" title="ElasticSearch学习记录(二)"><img src="/img/loading.gif" data-original="/img/bg-es.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="ElasticSearch学习记录(二)"/></a><div class="content"><a class="title" href="/posts/es-family/2/" title="ElasticSearch学习记录(二)">ElasticSearch学习记录(二)</a><time datetime="2021-04-25T06:53:19.000Z" title="发表于 2021-04-25 14:53:19">2021-04-25</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/es-family/1/" title="ElasticSearch学习记录(一)"><img src="/img/loading.gif" data-original="/img/bg-es.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="ElasticSearch学习记录(一)"/></a><div class="content"><a class="title" href="/posts/es-family/1/" title="ElasticSearch学习记录(一)">ElasticSearch学习记录(一)</a><time datetime="2021-04-25T01:51:46.000Z" title="发表于 2021-04-25 09:51:46">2021-04-25</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/mysql-family/5/" title="MySQL学习记录-五"><img src="/img/loading.gif" data-original="/img/bg-mysql.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="MySQL学习记录-五"/></a><div class="content"><a class="title" href="/posts/mysql-family/5/" title="MySQL学习记录-五">MySQL学习记录-五</a><time datetime="2020-11-10T14:46:30.000Z" title="发表于 2020-11-10 22:46:30">2020-11-10</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/mysql-family/4/" title="MySQL学习记录-四"><img src="/img/loading.gif" data-original="/img/bg-mysql.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="MySQL学习记录-四"/></a><div class="content"><a class="title" href="/posts/mysql-family/4/" title="MySQL学习记录-四">MySQL学习记录-四</a><time datetime="2020-11-10T02:16:12.000Z" title="发表于 2020-11-10 10:16:12">2020-11-10</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/mysql-family/3/" title="MySQL学习记录-三"><img src="/img/loading.gif" data-original="/img/bg-mysql.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="MySQL学习记录-三"/></a><div class="content"><a class="title" href="/posts/mysql-family/3/" title="MySQL学习记录-三">MySQL学习记录-三</a><time datetime="2020-11-09T12:19:02.000Z" title="发表于 2020-11-09 20:19:02">2020-11-09</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2021  <i id="heartbeat" class="fa fas fa-heartbeat"></i> Gao zj</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div><head><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/HCLonely/images@master/others/heartbeat.min.css"></head></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><div class="js-pjax"></div><script src="/js/background.js"></script><script src="/js/VolantisTags.js"></script><script type="text/javascript" src="/js/fairyDustCursor.js"></script><script defer="defer" id="fluttering_ribbon" mobile="true" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-fluttering-ribbon.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script><script>
+            window.imageLazyLoadSetting = {
+                isSPA: false,
+                preloadRatio: 1,
+                processImages: null,
+            };
+        </script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script><script>!function(n){n.imageLazyLoadSetting.processImages=o;var e=n.imageLazyLoadSetting.isSPA,i=n.imageLazyLoadSetting.preloadRatio||1,r=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function o(){e&&(r=Array.prototype.slice.call(document.querySelectorAll("img[data-original]")));for(var t,a=0;a<r.length;a++)0<=(t=(t=r[a]).getBoundingClientRect()).bottom&&0<=t.left&&t.top<=(n.innerHeight*i||document.documentElement.clientHeight*i)&&function(){var t,e,n,i,o=r[a];t=o,e=function(){r=r.filter(function(t){return o!==t})},n=new Image,i=t.getAttribute("data-original"),n.onload=function(){t.src=i,e&&e()},t.src!==i&&(n.src=i)}()}o(),n.addEventListener("scroll",function(){var t,e;t=o,e=n,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(e)},500)})}(this);</script></body></html>
