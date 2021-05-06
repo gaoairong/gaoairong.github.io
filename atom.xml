@@ -6,7 +6,7 @@
   <link href="http://example.com/atom.xml" rel="self"/>
   
   <link href="http://example.com/"/>
-  <updated>2021-04-26T12:13:20.491Z</updated>
+  <updated>2021-05-06T05:31:33.549Z</updated>
   <id>http://example.com/</id>
   
   <author>
@@ -15,6 +15,29 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>ElasticSearch学习记录(四)</title>
+    <link href="http://example.com/posts/es-family/4/"/>
+    <id>http://example.com/posts/es-family/4/</id>
+    <published>2021-04-26T12:20:39.000Z</published>
+    <updated>2021-05-06T05:31:33.549Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h3 id=&quot;回顾&quot;&gt;&lt;a href=&quot;#回顾&quot; class=&quot;headerlink&quot; title=&quot;回顾:&quot;&gt;&lt;/a&gt;回顾:&lt;/h3&gt;&lt;h4 id=&quot;1）集群状态&quot;&gt;&lt;a href=&quot;#1）集群状态&quot; class=&quot;headerlink&quot;</summary>
+        
+      
+    
+    
+    
+    
+    <category term="Elasticsearch" scheme="http://example.com/tags/Elasticsearch/"/>
+    
+  </entry>
   
   <entry>
     <title>ElasticSearch学习记录(三)</title>
@@ -471,27 +494,6 @@
         
         
     <summary type="html">&lt;h2 id=&quot;工厂方法模式&quot;&gt;&lt;a href=&quot;#工厂方法模式&quot; class=&quot;headerlink&quot; title=&quot;工厂方法模式&quot;&gt;&lt;/a&gt;工厂方法模式&lt;/h2&gt;&lt;h2 id=&quot;Factory-Method&quot;&gt;&lt;a href=&quot;#Factory-Method&quot;</summary>
-        
-      
-    
-    
-    
-    
-  </entry>
-  
-  <entry>
-    <title>设计模式-单例设计模式</title>
-    <link href="http://example.com/posts/63671/"/>
-    <id>http://example.com/posts/63671/</id>
-    <published>2020-09-21T01:10:16.000Z</published>
-    <updated>2021-04-23T09:15:54.150Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;h2 id=&quot;Singleton&quot;&gt;&lt;a href=&quot;#Singleton&quot; class=&quot;headerlink&quot;</summary>
         
       
     
