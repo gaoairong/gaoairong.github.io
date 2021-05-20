@@ -1,0 +1,435 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ElasticSearch学习记录(六) | </title><meta name="keywords" content="Elasticsearch"><meta name="author" content="Gao zj"><meta name="copyright" content="Gao zj"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="一、search template搜索模板，search template，高级功能，就可以将我们的一些搜索进行模板化，然后的话，每次执行这个搜索，就直接调用模板，给传入一些参数就可以了 1 template入门案例 简单定义参数并传递 123456789101112131415GET &#x2F;cars&#x2F;_search&#x2F;template&amp;#123;&quot;source&amp;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ElasticSearch学习记录(六)">
+<meta property="og:url" content="http://example.com/posts/es-family/6/index.html">
+<meta property="og:site_name">
+<meta property="og:description" content="一、search template搜索模板，search template，高级功能，就可以将我们的一些搜索进行模板化，然后的话，每次执行这个搜索，就直接调用模板，给传入一些参数就可以了 1 template入门案例 简单定义参数并传递 123456789101112131415GET &#x2F;cars&#x2F;_search&#x2F;template&amp;#123;&quot;source&amp;">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/bg-es.jpg">
+<meta property="article:published_time" content="2021-05-12T08:19:08.000Z">
+<meta property="article:modified_time" content="2021-05-12T11:22:15.663Z">
+<meta property="article:author" content="Gao zj">
+<meta property="article:tag" content="Elasticsearch">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/bg-es.jpg"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/posts/es-family/6/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#121212","position":"top-right"},
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2021-05-12 19:22:15'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><div class="aplayer" data-id="797214285" data-server="netease" data-type="playlist" data-fixed="true" data-listFolded="false" data-order="random" data-preload="none"></div><link rel="stylesheet" href="https://cdn.bootcss.com/aplayer/1.10.1/APlayer.min.css"><script src="https://cdn.bootcss.com/aplayer/1.10.1/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/meting@1.2.0/dist/Meting.min.js"></script><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    })(window)</script><link rel="stylesheet" href="/css/background.css"><link rel="stylesheet" href="/css/VolantisTags.css"><link rel="stylesheet" href="/css/mycss.css"><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="" type="application/atom+xml">
+</head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="/img/loading.gif" data-original="/img/avatar.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">33</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">21</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/messageboard/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/timeline/"><i class="fa-fw fa fa-bell"></i><span> 日志</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fa fa-list"></i><span> 菜单</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/%E5%85%B3%E4%BA%8E"><i class="fa-fw /about/"></i><span> 0</span></a></li><li><a class="site-page child" href="/myself"><i class="fa-fw /myself/"></i><span> 1</span></a></li><li><a class="site-page child" href="/butterfly%E4%B8%BB%E9%A2%98"><i class="fa-fw https://github.com/jerryc127/hexo-theme-butterfly/"></i><span> 2</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/bg-es.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/"></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/messageboard/"><i class="fa-fw fa fa-paper-plane"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/timeline/"><i class="fa-fw fa fa-bell"></i><span> 日志</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fa fa-list"></i><span> 菜单</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/%E5%85%B3%E4%BA%8E"><i class="fa-fw /about/"></i><span> 0</span></a></li><li><a class="site-page child" href="/myself"><i class="fa-fw /myself/"></i><span> 1</span></a></li><li><a class="site-page child" href="/butterfly%E4%B8%BB%E9%A2%98"><i class="fa-fw https://github.com/jerryc127/hexo-theme-butterfly/"></i><span> 2</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">ElasticSearch学习记录(六)</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-05-12T08:19:08.000Z" title="发表于 2021-05-12 16:19:08">2021-05-12</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2021-05-12T11:22:15.663Z" title="更新于 2021-05-12 19:22:15">2021-05-12</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="ElasticSearch学习记录(六)"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="一、search-template"><a href="#一、search-template" class="headerlink" title="一、search template"></a>一、search template</h1><p>搜索模板，search template，高级功能，就可以将我们的一些搜索进行模板化，然后的话，每次执行这个搜索，就直接调用模板，给传入一些参数就可以了</p>
+<p><strong>1 template入门案例</strong></p>
+<p>简单定义参数并传递</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">GET &#x2F;cars&#x2F;_search&#x2F;template</span><br><span class="line">&#123;</span><br><span class="line">&quot;source&quot; : &#123;</span><br><span class="line">&quot;query&quot; : &#123;</span><br><span class="line">&quot;match&quot; : &#123;</span><br><span class="line">&quot;remark&quot; : &quot;&#123;&#123;kw&#125;&#125;&quot;</span><br><span class="line">&#125;</span><br><span class="line">&#125;,</span><br><span class="line">&quot;size&quot; : &quot;&#123;&#123;size&#125;&#125;&quot;</span><br><span class="line">&#125;,</span><br><span class="line">&quot;params&quot;: &#123;</span><br><span class="line">&quot;kw&quot; : &quot;大众&quot;,</span><br><span class="line">&quot;size&quot; : 2</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>toJson方式传递参数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">GET cars&#x2F;_search&#x2F;template</span><br><span class="line">&#123;</span><br><span class="line">&quot;source&quot;: &quot;&#123; \&quot;query\&quot;: &#123; \&quot;match\&quot;: &#123;&#123;#toJson&#125;&#125;parameter&#123;&#123;&#x2F;toJson&#125;&#125; &#125;&#125;&quot;,</span><br><span class="line">&quot;params&quot;: &#123;</span><br><span class="line">&quot;parameter&quot; : &#123;</span><br><span class="line">&quot;remark&quot; : &quot;大众&quot;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>join方式传递参数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">GET cars&#x2F;_search&#x2F;template</span><br><span class="line">&#123;</span><br><span class="line">&quot;source&quot; : &#123;</span><br><span class="line">&quot;query&quot; : &#123;</span><br><span class="line">&quot;match&quot; : &#123;</span><br><span class="line">&quot;remark&quot; : &quot;&#123;&#123;#join delimiter&#x3D;&#39; &#39;&#125;&#125;kw&#123;&#123;&#x2F;join delimiter&#x3D;&#39; &#39;&#125;&#125;&quot;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line">&#125;,</span><br><span class="line">&quot;params&quot;: &#123;</span><br><span class="line">&quot;kw&quot; : [&quot;大众&quot;, &quot;标致&quot;]</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>default value定义：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">GET cars&#x2F;_search&#x2F;template</span><br><span class="line">&#123;</span><br><span class="line">&quot;source&quot; : &#123;</span><br><span class="line">&quot;query&quot; : &#123;</span><br><span class="line">&quot;range&quot; : &#123;</span><br><span class="line">&quot;price&quot; : &#123;</span><br><span class="line">&quot;gte&quot; : &quot;&#123;&#123;start&#125;&#125;&quot;,</span><br><span class="line">&quot;lte&quot; : &quot;&#123;&#123;end&#125;&#125;&#123;&#123;^end&#125;&#125;200000&#123;&#123;&#x2F;end&#125;&#125;&quot;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line">&#125;,</span><br><span class="line">&quot;params&quot;: &#123;</span><br><span class="line">&quot;start&quot; : 100000</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>2 记录template实现重复调用</strong></p>
+<p>可以使用Mustache语言作为搜索请求的预处理，它提供了模板，然后通过键值对来替换模板中的变量。把脚本存储在本地磁盘中，默认的位置为：elasticsearch\config\scripts，通过引用脚本名称进行使用</p>
+<p><strong>2.1 保存template到ES</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">POST _scripts&#x2F;test</span><br><span class="line">&#123;</span><br><span class="line">&quot;script&quot;: &#123;</span><br><span class="line">&quot;lang&quot;: &quot;mustache&quot;,</span><br><span class="line">&quot;source&quot;: &#123;</span><br><span class="line">&quot;query&quot;: &#123;</span><br><span class="line">&quot;match&quot; : &#123;</span><br><span class="line">&quot;remark&quot; : &quot;&#123;&#123;kw&#125;&#125;&quot;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>2.2 调用template执行搜索</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">GET cars&#x2F;_search&#x2F;template</span><br><span class="line">&#123;</span><br><span class="line">&quot;id&quot;: &quot;test&quot;,</span><br><span class="line">&quot;params&quot;: &#123;</span><br><span class="line">&quot;kw&quot;: &quot;大众&quot;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>2.3 查询已定义的template</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GET _scripts&#x2F;test</span><br></pre></td></tr></table></figure>
+
+<p><strong>2.4 删除已定义的template</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DELETE _scripts&#x2F;test</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="二、suggest-search-completion-suggest"><a href="#二、suggest-search-completion-suggest" class="headerlink" title="二、suggest search(completion suggest)"></a>二、suggest search(completion suggest)</h1><p>suggest search（completion suggest）：就是建议搜索或称为搜索建议，也可以叫做自动完成-auto completion。类似百度中的搜索联想提示功能。</p>
+<p>ES实现suggest的时候，性能非常高，其构建的不是倒排索引，也不是正排索引，就是纯的用于进行前缀搜索的一种特殊的数据结构，而且会全部放在内存中，所以suggest search进行的前缀搜索提示，性能是非常高。</p>
+<p>需要使用suggest的时候，必须在定义index时，为其mapping指定开启suggest。具体如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">PUT &#x2F;movie</span><br><span class="line">&#123;</span><br><span class="line">&quot;mappings&quot;: &#123;</span><br><span class="line">&quot;properties&quot; : &#123;</span><br><span class="line">&quot;title&quot; : &#123;</span><br><span class="line">&quot;type&quot;: &quot;text&quot;,</span><br><span class="line">&quot;analyzer&quot;: &quot;ik_max_word&quot;,</span><br><span class="line">&quot;fields&quot;: &#123;</span><br><span class="line">&quot;suggest&quot; : &#123;</span><br><span class="line">&quot;type&quot; : &quot;completion&quot;,</span><br><span class="line">&quot;analyzer&quot;: &quot;ik_max_word&quot;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line">&#125;,</span><br><span class="line">&quot;content&quot;: &#123;</span><br><span class="line">&quot;type&quot;: &quot;text&quot;,</span><br><span class="line">&quot;analyzer&quot;: &quot;ik_max_word&quot;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">PUT &#x2F;movie&#x2F;_doc&#x2F;1</span><br><span class="line">&#123;</span><br><span class="line">&quot;title&quot;: &quot;西游记电影系列&quot;,</span><br><span class="line">&quot;content&quot;: &quot;西游记之月光宝盒将与2021年进行......&quot;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">PUT &#x2F;movie&#x2F;_doc&#x2F;2</span><br><span class="line">&#123;</span><br><span class="line">&quot;title&quot;: &quot;西游记文学系列&quot;,</span><br><span class="line">&quot;content&quot;: &quot;某知名网络小说作家已经完成了大话西游同名小说的出版&quot;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">PUT &#x2F;movie&#x2F;_doc&#x2F;3</span><br><span class="line">&#123;</span><br><span class="line">&quot;title&quot;: &quot;西游记之大话西游手游&quot;,</span><br><span class="line">&quot;content&quot;: &quot;网易游戏近日出品了大话西游经典IP的手游，正在火爆内测中&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>suggest 搜索：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">GET &#x2F;movie&#x2F;_search</span><br><span class="line">&#123;</span><br><span class="line">&quot;suggest&quot;: &#123;</span><br><span class="line">&quot;my-suggest&quot; : &#123;</span><br><span class="line">&quot;prefix&quot; : &quot;西游记&quot;,</span><br><span class="line">&quot;completion&quot; : &#123;</span><br><span class="line">&quot;field&quot; : &quot;title.suggest&quot;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="三、geo-point-地理位置搜索和聚合分析"><a href="#三、geo-point-地理位置搜索和聚合分析" class="headerlink" title="三、geo point - 地理位置搜索和聚合分析"></a>三、geo point - 地理位置搜索和聚合分析</h1><p>ES支持地理位置的搜索和聚合分析，可实现在指定区域内搜索数据、搜索指定地点附近的数据、聚合分析指定地点附近的数据等操作。</p>
+<p>ES中如果使用地理位置搜索的话，必须提供一个特殊的字段类型。GEO - geo_point。地理位置的坐标点。</p>
+<p><strong>1、定义geo point mapping</strong></p>
+<p>如果需要使用地址坐标，则需要定义一个指定的mapping类型。具体如下：</p>
+<p>使用什么数据可以确定，地球上的一个具体的点？经纬度。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">PUT &#x2F;hotel_app</span><br><span class="line">&#123;</span><br><span class="line">&quot;mappings&quot;: &#123;</span><br><span class="line">&quot;properties&quot;: &#123;</span><br><span class="line">&quot;pin&quot;: &#123;</span><br><span class="line">&quot;type&quot;: &quot;geo_point&quot;</span><br><span class="line">&#125;,</span><br><span class="line">&quot;name&quot; : &#123;</span><br><span class="line">&quot;type&quot; : &quot;text&quot;,</span><br><span class="line">&quot;analyzer&quot;: &quot;ik_max_word&quot;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>2、录入数据</strong></p>
+<p>新增一个基于geo point类型的数据，可以使用多种方式。</p>
+<p><font color='red'><em><strong>多种类型描述geo_point类型字段的时候，在搜索数据的时候，显示的格式和录入的格式是统一的。不影响搜索。任何数据描述的geo_point类型字段，都适用地理位置搜索。</strong></em></font></p>
+<p>数据范围要求：纬度范围是<code>-90~90</code>之间，经度范围是<code>-180~180</code>之间。经纬度数据都是浮点数或数字串（数字组成的字符串），最大精度：小数点后7位。（常用小数点后6位即可。）</p>
+<p>基于对象：latitude：纬度、longitude：经度。<font color='red'><em><strong>语义清晰，建议使用。</strong></em></font></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">PUT &#x2F;hotel_app&#x2F;_doc&#x2F;1</span><br><span class="line">&#123;</span><br><span class="line">&quot;name&quot;: &quot;七天连锁酒店&quot;,</span><br><span class="line">&quot;pin&quot; : &#123;</span><br><span class="line">&quot;lat&quot; : 40.12,</span><br><span class="line">&quot;lon&quot; : -71.34</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>基于字符串：依次定义纬度、经度。不推荐使用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">PUT &#x2F;hotel_app&#x2F;_doc&#x2F;2</span><br><span class="line">&#123;</span><br><span class="line">&quot;name&quot;: &quot;维多利亚大酒店&quot;,</span><br><span class="line">&quot;pin&quot; : &quot;40.99, -70.81&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>基于数组：依次定义经度、纬度。不推荐使用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">PUT &#x2F;hotel_app&#x2F;_doc&#x2F;3</span><br><span class="line">&#123;</span><br><span class="line">&quot;name&quot;: &quot; 红树林宾馆&quot;,</span><br><span class="line">&quot;pin&quot; : [40, -73.81]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>3、搜索指定区域范围内的数据</strong></p>
+<p>总结：</p>
+<p>矩形范围搜索：传入的top_left和bottom_right坐标点是有固定要求的。地图中以北作为top，南作为bottom，西作为left，东作为right。也就是top_left应该从西北向东南。Bottom_right应该从东南向西北。Top_left的纬度应该大于bottom_right的纬度，top_left的经度应该小于bottom_right的经度。</p>
+<p>多边形范围搜索：对传入的若干点的坐标顺序没有任何的要求。只要传入若干地理位置坐标点，即可形成多边形。</p>
+<p>搜索矩形范围内的数据</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line">GET &#x2F;hotel_app&#x2F;_doc&#x2F;_search</span><br><span class="line">&#123;</span><br><span class="line">&quot;query&quot;: &#123;</span><br><span class="line">&quot;bool&quot;: &#123;</span><br><span class="line">&quot;must&quot;: [</span><br><span class="line">&#123;</span><br><span class="line">&quot;match_all&quot;: &#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line">],</span><br><span class="line">&quot;filter&quot;: &#123;</span><br><span class="line">&quot;geo_bounding_box&quot;: &#123;</span><br><span class="line">&quot;pin&quot;: &#123;</span><br><span class="line">&quot;top_left&quot; : &#123;</span><br><span class="line">&quot;lat&quot; : 41.73,</span><br><span class="line">&quot;lon&quot; : -74.1</span><br><span class="line">&#125;,</span><br><span class="line">&quot;bottom_right&quot; : &#123;</span><br><span class="line">&quot;lat&quot; : 40.01,</span><br><span class="line">&quot;lon&quot; : -70.12</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">GET &#x2F;hotel_app&#x2F;_doc&#x2F;_search</span><br><span class="line">&#123;</span><br><span class="line">&quot;query&quot;: &#123;</span><br><span class="line">&quot;constant_score&quot;: &#123;</span><br><span class="line">&quot;filter&quot;: &#123;</span><br><span class="line">&quot;geo_bounding_box&quot;: &#123;</span><br><span class="line">&quot;pin&quot;: &#123;</span><br><span class="line">&quot;top_left&quot;: &#123;</span><br><span class="line">&quot;lat&quot;: -70,</span><br><span class="line">&quot;lon&quot;: 39</span><br><span class="line">&#125;,</span><br><span class="line">&quot;bottom_right&quot;: &#123;</span><br><span class="line">&quot;lat&quot;: -75,</span><br><span class="line">&quot;lon&quot;: 41</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line">&#x2F;&#x2F;使用query方式查询</span><br><span class="line">GET &#x2F;hotel_app&#x2F;_doc&#x2F;_search</span><br><span class="line">&#123;</span><br><span class="line">&quot;query&quot;: &#123;</span><br><span class="line"></span><br><span class="line">&quot;geo_bounding_box&quot;: &#123;</span><br><span class="line">&quot;pin&quot;: &#123;</span><br><span class="line">&quot;top_left&quot; : &#123;</span><br><span class="line">&quot;lat&quot; : 41.73,</span><br><span class="line">&quot;lon&quot; : -74.1</span><br><span class="line">&#125;,</span><br><span class="line">&quot;bottom_right&quot; : &#123;</span><br><span class="line">&quot;lat&quot; : 40.01,</span><br><span class="line">&quot;lon&quot; : -70.12</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>搜索多边形范围内的数据</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">GET &#x2F;hotel_app&#x2F;_doc&#x2F;_search </span><br><span class="line">&#123;</span><br><span class="line">&quot;query&quot;: &#123;</span><br><span class="line">&quot;bool&quot;: &#123;</span><br><span class="line">&quot;must&quot;: [</span><br><span class="line">&#123;</span><br><span class="line">&quot;match_all&quot;: &#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line">],</span><br><span class="line">&quot;filter&quot;: &#123;</span><br><span class="line">&quot;geo_polygon&quot;: &#123;</span><br><span class="line">&quot;pin&quot;: &#123;</span><br><span class="line">&quot;points&quot;: [</span><br><span class="line">&#123;&quot;lat&quot; : 40.73, &quot;lon&quot; : -74.1&#125;,</span><br><span class="line">&#123;&quot;lat&quot; : 40.01, &quot;lon&quot; : -71.12&#125;,</span><br><span class="line">&#123;&quot;lat&quot; : 50.56, &quot;lon&quot; : -90.58&#125;</span><br><span class="line">]</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>4、搜索某地点附近的数据</strong></p>
+<p>这个搜索在项目中更加常用。类似附近搜索功能。</p>
+<p>Distance距离的单位，常用的有米（m）和千米（km）。</p>
+<p>建议使用filter来过滤geo_point数据。因为geo_point数据相关度评分计算比较耗时。使用query来搜索geo_point数据效率相对会慢一些。建议使用filter。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">GET &#x2F;hotel_app&#x2F;_doc&#x2F;_search</span><br><span class="line">&#123;</span><br><span class="line">&quot;query&quot;: &#123;</span><br><span class="line">&quot;bool&quot;: &#123;</span><br><span class="line">&quot;must&quot;: [</span><br><span class="line">&#123;</span><br><span class="line">&quot;match_all&quot;: &#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line">],</span><br><span class="line">&quot;filter&quot;: &#123;</span><br><span class="line">&quot;geo_distance&quot;: &#123;</span><br><span class="line">&quot;distance&quot;: &quot;200km&quot;,</span><br><span class="line">&quot;pin&quot;: &#123;</span><br><span class="line">&quot;lat&quot;: 40,</span><br><span class="line">&quot;lon&quot;: -70</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">GET hotel_app&#x2F;_search</span><br><span class="line">&#123;</span><br><span class="line">&quot;query&quot;: &#123;</span><br><span class="line">&quot;geo_distance&quot; : &#123;</span><br><span class="line">&quot;distance&quot; : &quot;90km&quot;,</span><br><span class="line">&quot;pin&quot; : &#123;</span><br><span class="line">&quot;lat&quot; : 40.55,</span><br><span class="line">&quot;lon&quot; : -71.12</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>5、统计某位置附近区域内的数据</strong></p>
+<p>聚合统计分别距离某位置80英里，300英里，1000英里范围内的数据数量。</p>
+<p>其中unit是距离单位，常用单位有：米（m），千米（km），英里（mi）</p>
+<p>distance_type是统计算法：sloppy_arc默认算法、arc最高精度、plane最高效率</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">GET &#x2F;hotel_app&#x2F;_doc&#x2F;_search</span><br><span class="line">&#123;</span><br><span class="line">&quot;size&quot;: 0,</span><br><span class="line">&quot;aggs&quot;: &#123;</span><br><span class="line">&quot;agg_by_pin&quot; : &#123;</span><br><span class="line">&quot;geo_distance&quot;: &#123;</span><br><span class="line">&quot;distance_type&quot;: &quot;arc&quot;, </span><br><span class="line">&quot;field&quot;: &quot;pin&quot;,</span><br><span class="line">&quot;origin&quot;: &#123;</span><br><span class="line">&quot;lat&quot;: 40,</span><br><span class="line">&quot;lon&quot;: -70</span><br><span class="line">&#125;,</span><br><span class="line">&quot;unit&quot;: &quot;mi&quot;, </span><br><span class="line">&quot;ranges&quot;: [</span><br><span class="line">&#123;</span><br><span class="line">&quot;to&quot;: 80</span><br><span class="line">&#125;,</span><br><span class="line">&#123;</span><br><span class="line">&quot;from&quot;: 80,</span><br><span class="line">&quot;to&quot;: 300</span><br><span class="line">&#125;,</span><br><span class="line">&#123;</span><br><span class="line">&quot;from&quot;: 300,</span><br><span class="line">&quot;to&quot;: 1000</span><br><span class="line">&#125;</span><br><span class="line">]</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="四、Beats"><a href="#四、Beats" class="headerlink" title="四、Beats"></a>四、Beats</h1><p>Beats是一个开放源代码的数据发送器。我们可以把Beats作为一种代理安装在我们的服务器上，这样就可以比较方便地将数据发送到Elasticsearch或者Logstash中。Elastic Stack提供了多种类型的Beats组件。</p>
+<table>
+<thead>
+<tr>
+<th>审计数据</th>
+<th>AuditBeat</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>日志文件</td>
+<td>FileBeat</td>
+</tr>
+<tr>
+<td>云数据</td>
+<td>FunctionBeat</td>
+</tr>
+<tr>
+<td>可用性数据</td>
+<td>HeartBeat</td>
+</tr>
+<tr>
+<td>系统日志</td>
+<td>JournalBeat</td>
+</tr>
+<tr>
+<td>指标数据</td>
+<td>MetricBeat</td>
+</tr>
+<tr>
+<td>网络流量数据</td>
+<td>PacketBeat</td>
+</tr>
+<tr>
+<td>Windows事件日志</td>
+<td>Winlogbeat</td>
+</tr>
+</tbody></table>
+<p><img src="/img/loading.gif" data-original="/images/es6/beats.png" alt="beats"></p>
+<p>Beats可以直接将数据发送到Elasticsearch或者发送到Logstash，基于Logstash可以进一步地对数据进行处理，然后将处理后的数据存入到Elasticsearch，最后使用Kibana进行数据可视化。</p>
+<p><strong>1、FileBeat简介</strong></p>
+<p>FileBeat专门用于转发和收集日志数据的轻量级采集工具。它可以为作为代理安装在服务器上，FileBeat监视指定路径的日志文件，收集日志数据，并将收集到的日志转发到Elasticsearch或者Logstash。</p>
+<p><strong>2、FileBeat的工作原理</strong></p>
+<p>启动FileBeat时，会启动一个或者多个输入（Input），这些Input监控指定的日志数据位置。FileBeat会针对每一个文件启动一个Harvester（收割机）。Harvester读取每一个文件的日志，将新的日志发送到libbeat，libbeat将数据收集到一起，并将数据发送给输出（Output）。</p>
+<p><img src="/img/loading.gif" data-original="/images/es6/fileBeat.png" alt="fileBeat"></p>
+<p><strong>3、安装FileBeat</strong></p>
+<p>安装FileBeat只需要将FileBeat Linux安装包上传到Linux系统，并将压缩包解压到系统就可以了。</p>
+<p><a target="_blank" rel="noopener" href="https://www.elastic.co/cn/downloads/past-releases/filebeat-7-6-1">FileBeat官方下载地址</a></p>
+<p>上传FileBeat安装到Linux，并解压。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -xvzf filebeat-7.6.1-linux-x86_64.tar.gz -C &#x2F;usr&#x2F;local&#x2F;es&#x2F;</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>4、使用FileBeat采集MQ日志到Elasticsearch</strong></p>
+<p><strong>4.1、需求分析</strong></p>
+<p>在资料中有一个mq_server.log.tar.gz压缩包，里面包含了很多的MQ服务器日志，现在我们为了通过在Elasticsearch中快速查询这些日志，定位问题。我们需要用FileBeats将日志数据上传到Elasticsearch中。</p>
+<p>问题：</p>
+<p>首先，我们要指定FileBeat采集哪些MQ日志，因为FileBeats中必须知道采集存放在哪儿的日志，才能进行采集。</p>
+<p> 其次，采集到这些数据后，还需要指定FileBeats将采集到的日志输出到Elasticsearch，那么Elasticsearch的地址也必须指定。</p>
+<p><strong>4.2、配置FileBeats</strong></p>
+<p>FileBeats配置文件主要分为两个部分。</p>
+<ol>
+<li><p>inputs</p>
+</li>
+<li><p>output</p>
+</li>
+</ol>
+<p>从名字就能看出来，一个是用来输入数据的，一个是用来输出数据的。</p>
+<p><strong>4.2.1、input配置</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">filebeat.inputs:</span><br><span class="line">- type: log</span><br><span class="line">  enabled: true</span><br><span class="line">  paths:</span><br><span class="line">    - &#x2F;var&#x2F;log&#x2F;*.log</span><br><span class="line">    #- c:\programdata\elasticsearch\logs\*</span><br></pre></td></tr></table></figure>
+
+
+
+<p>在FileBeats中，可以读取一个或多个数据源。</p>
+<p><strong>FileBeats配置文件 - input</strong></p>
+<p><img src="/img/loading.gif" data-original="/images/es6/fileBeat-input.png" alt="fileBeat-input"></p>
+<p><strong>4.2.2、output配置</strong></p>
+<p><strong>FileBeat配置文件 - output</strong></p>
+<p><img src="/img/loading.gif" data-original="/images/es6/fileBeat-output.png" alt="fileBeat-output"></p>
+<p>默认FileBeat会将日志数据放入到名称为：filebeat-%filebeat版本号%-yyyy.MM.dd 的索引中。</p>
+<p>PS：</p>
+<p>FileBeats中的filebeat.reference.yml包含了FileBeats所有支持的配置选项。</p>
+<p><strong>4.3、配置文件</strong></p>
+<ol>
+<li>创建配置文件</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd &#x2F;usr&#x2F;local&#x2F;es&#x2F;filebeat-7.6.1-linux-x86_64</span><br><span class="line">touch filebeat_mq_log.yml</span><br><span class="line">vim filebeat_mq_log.yml</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>复制以下到配置文件中</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">filebeat.inputs:</span><br><span class="line">- type: log</span><br><span class="line">  enabled: true</span><br><span class="line">  paths:</span><br><span class="line">    - &#x2F;var&#x2F;mq&#x2F;log&#x2F;server.log.*</span><br><span class="line"></span><br><span class="line">output.elasticsearch:</span><br><span class="line">    hosts: [&quot;192.168.80.130:9200&quot;, &quot;192.168.80.129:9200&quot;, &quot;192.168.80.128:9200&quot;]</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>4.4、运行FileBeat</strong></p>
+<ol>
+<li>启动Elasticsearch</li>
+</ol>
+<p>在每个节点上执行以下命令，启动Elasticsearch集群：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nohup &#x2F;usr&#x2F;local&#x2F;es&#x2F;elasticsearch-7.6.1&#x2F;bin&#x2F;elasticsearch 2&gt;&amp;1 &amp;</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>运行FileBeat</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.&#x2F;filebeat -c filebeat_mq_log.yml -e</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>将日志数据上传到/var/mq/log，并解压</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p &#x2F;var&#x2F;mq&#x2F;log</span><br><span class="line">cd &#x2F;var&#x2F;mq&#x2F;log</span><br><span class="line">tar -zxvf mq_server.log.tar.gz</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>4.5、查询数据</strong></p>
+<p>通过head插件，我们可以看到filebeat采集了日志消息，并写入到Elasticsearch集群中。</p>
+<h1 id="五、FileBeat是如何工作的"><a href="#五、FileBeat是如何工作的" class="headerlink" title="五、FileBeat是如何工作的"></a>五、FileBeat是如何工作的</h1><p>FileBeat主要由input和harvesters（收割机）组成。这两个组件协同工作，并将数据发送到指定的输出。</p>
+<p><strong>1、input和harvester</strong></p>
+<p><strong>1.1、inputs（输入）</strong></p>
+<p>input是负责管理Harvesters和查找所有要读取的文件的组件</p>
+<p>如果输入类型是 log，input组件会查找磁盘上与路径描述的所有文件，并为每个文件启动一个Harvester，每个输入都独立地运行</p>
+<p><strong>1.2、Harvesters（收割机）</strong></p>
+<p> Harvesters负责读取单个文件的内容，它负责打开/关闭文件，并逐行读取每个文件的内容，将读取到的内容发送给输出</p>
+<p> 每个文件都会启动一个Harvester</p>
+<p>Harvester运行时，文件将处于打开状态。如果文件在读取时，被移除或者重命名，FileBeat将继续读取该文件</p>
+<p><strong>2、FileBeats如何保持文件状态</strong></p>
+<p> FileBeat保存每个文件的状态，并定时将状态信息保存在磁盘的「注册表」文件中</p>
+<p> 该状态记录Harvester读取的最后一次偏移量，并确保发送所有的日志数据</p>
+<p> 如果输出（Elasticsearch或者Logstash）无法访问，FileBeat会记录成功发送的最后一行，并在输出（Elasticsearch或者Logstash）可用时，继续读取文件发送数据</p>
+<p>在运行FileBeat时，每个input的状态信息也会保存在内存中，重新启动FileBeat时，会从「注册表」文件中读取数据来重新构建状态。</p>
+<p>在/usr/local/es/filebeat-7.6.1-linux-x86_64/data目录中有一个Registry文件夹，里面有一个data.json，该文件中记录了Harvester读取日志的offset。</p>
+<p><img src="/img/loading.gif" data-original="/images/es6/fileBeat-save.png" alt="fileBeat-save"></p>
+<h1 id="六-Logstash"><a href="#六-Logstash" class="headerlink" title="六.  Logstash"></a>六.  Logstash</h1><p><strong>1、简介</strong></p>
+<p>Logstash是一个开源的数据采集引擎。它可以动态地将不同来源的数据统一采集，并按照指定的数据格式进行处理后，将数据加载到其他的目的地。最开始，Logstash主要是针对日志采集，但后来Logstash开发了大量丰富的插件，所以，它可以做更多的海量数据的采集。</p>
+<p>它可以处理各种类型的日志数据，例如：Apache的web log、Java的log4j日志数据，或者是系统、网络、防火墙的日志等等。它也可以很容易的和Elastic Stack的Beats组件整合，也可以很方便的和关系型数据库、NoSQL数据库、MQ等整合。</p>
+<p><img src="/img/loading.gif" data-original="/images/es6/logstash.jpeg" alt="logstash"></p>
+<p><strong>1.1  经典架构</strong></p>
+<p><img src="/img/loading.gif" data-original="/images/es6/logstash-stand.png" alt="logstash-stand"></p>
+<p><strong>1.2  对比FileBeat</strong></p>
+<p>logstash是jvm跑的，资源消耗比较大</p>
+<p>而FileBeat是基于golang编写的，功能较少但资源消耗也比较小，更轻量级</p>
+<p>logstash 和filebeat都具有日志收集功能，Filebeat更轻量，占用资源更少</p>
+<p>logstash 具有filter功能，能过滤分析日志</p>
+<p>一般结构都是filebeat采集日志，然后发送到消息队列，redis，MQ中然后logstash去获取，利用filter功能过滤分析，然后存储到elasticsearch中</p>
+<p>FileBeat和Logstash配合，实现背压机制</p>
+<p><img src="/img/loading.gif" data-original="/images/es6/backPressure.jpeg" alt="backPressure"></p>
+<p><strong>2、安装Logstash和Kibana</strong></p>
+<p><strong>2.1  安装Logstash</strong></p>
+<ol>
+<li>下载Logstash</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https:&#x2F;&#x2F;www.elastic.co&#x2F;cn&#x2F;downloads&#x2F;past-releases&#x2F;logstash-7-6-1</span><br></pre></td></tr></table></figure>
+
+<p>此处：我们可以选择资料中的logstash-7.6.1.zip安装包。</p>
+<ol start="2">
+<li>解压Logstash到指定目录</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">unzip logstash-7.6.1 -d &#x2F;usr&#x2F;local&#x2F;es&#x2F;</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>运行测试</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd &#x2F;usr&#x2F;local&#x2F;es&#x2F;logstash-7.6.1&#x2F;</span><br><span class="line">bin&#x2F;logstash -e &#39;input &#123; stdin &#123; &#125; &#125; output &#123; stdout &#123;&#125; &#125;&#39;</span><br></pre></td></tr></table></figure>
+
+<p>ps：</p>
+<p>-e选项表示，直接把配置放在命令中，这样可以有效快速进行测试</p>
+<p>等待一会，让Logstash启动完毕。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Sending Logstash logs to &#x2F;usr&#x2F;local&#x2F;es&#x2F;logstash-7.6.1&#x2F;logs which is now configured via log4j2.properties</span><br><span class="line">[2021-02-28T16:31:44,159][WARN ][logstash.config.source.multilocal] Ignoring the &#39;pipelines.yml&#39; file because modules or command line options are specified</span><br><span class="line">[2021-02-28T16:31:44,264][INFO ][logstash.runner          ] Starting Logstash &#123;&quot;logstash.version&quot;&#x3D;&gt;&quot;7.6.1&quot;&#125;</span><br><span class="line">[2021-02-28T16:31:45,631][INFO ][org.reflections.Reflections] Reflections took 37 ms to scan 1 urls, producing 20 keys and 40 values </span><br><span class="line">[2021-02-28T16:31:46,532][WARN ][org.logstash.instrument.metrics.gauge.LazyDelegatingGauge][main] A gauge metric of an unknown type (org.jruby.RubyArray) has been create for key: cluster_uuids. This may result in invalid serialization.  It is recommended to log an issue to the responsible developer&#x2F;development team.</span><br><span class="line">[2021-02-28T16:31:46,560][INFO ][logstash.javapipeline    ][main] Starting pipeline &#123;:pipeline_id&#x3D;&gt;&quot;main&quot;, &quot;pipeline.workers&quot;&#x3D;&gt;2, &quot;pipeline.batch.size&quot;&#x3D;&gt;125, &quot;pipeline.batch.delay&quot;&#x3D;&gt;50, &quot;pipeline.max_inflight&quot;&#x3D;&gt;250, &quot;pipeline.sources&quot;&#x3D;&gt;[&quot;config string&quot;], :thread&#x3D;&gt;&quot;#&lt;Thread:0x3ccbc15b run&gt;&quot;&#125;</span><br><span class="line">[2021-02-28T16:31:47,268][INFO ][logstash.javapipeline    ][main] Pipeline started &#123;&quot;pipeline.id&quot;&#x3D;&gt;&quot;main&quot;&#125;</span><br><span class="line">The stdin plugin is now waiting for input:</span><br><span class="line">[2021-02-28T16:31:47,348][INFO ][logstash.agent           ] Pipelines running &#123;:count&#x3D;&gt;1, :running_pipelines&#x3D;&gt;[:main], :non_running_pipelines&#x3D;&gt;[]&#125;</span><br><span class="line">[2021-02-28T16:31:47,550][INFO ][logstash.agent           ] Successfully started Logstash API endpoint &#123;:port&#x3D;&gt;9600&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>然后，随便在控制台中输入内容，等待Logstash的输出。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">&quot;host&quot; &#x3D;&gt; &quot;127.0.0.1&quot;,</span><br><span class="line">&quot;message&quot; &#x3D;&gt; &quot;hello logstash&quot;,</span><br><span class="line">&quot;@version&quot; &#x3D;&gt; &quot;1&quot;,</span><br><span class="line">&quot;@timestamp&quot; &#x3D;&gt; 2021-02-28:01:01.007Z</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>参考文档 &amp; 备份 tips：</p>
+<p><a target="_blank" rel="noopener" href="https://www.centos.org/download/">centos官网</a>、<a target="_blank" rel="noopener" href="https://mirrors.tuna.tsinghua.edu.cn/">各种镜像</a>、<a target="_blank" rel="noopener" href="https://mirrors.aliyun.com/centos-vault/?spm=a2c6h.13651104.0.0.3c0a12b2ksHbLs">(备用地址)各个版本centos镜</a>、<a target="_blank" rel="noopener" href="https://blog.csdn.net/paotianzhou/article/details/97923351">镜像配置</a>、<a target="_blank" rel="noopener" href="https://blog.csdn.net/y18771025420/article/details/105307783">markdown 下载</a>、<a target="_blank" rel="noopener" href="https://ethant.top/articles/hexo541u/">站点美化</a></p>
+<p>VM16 激活许可证：<code>ZF3R0-FHED2-M80TY-8QYGC-NPKYF</code></p>
+<p>关闭防火墙命令：<code>systemctl stop firewalld.service</code></p>
+<p>bash: jsp: command not found…解决方案：<code>yum install java-1.8.0-openjdk-devel.x86_64</code></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">Gao zj</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/posts/es-family/6/">http://example.com/posts/es-family/6/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank"></a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Elasticsearch/">Elasticsearch</a></div><div class="post_share"><div class="social-share" data-image="/img/bg-es.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/posts/es-family/5/"><img class="next-cover" src="/img/loading.gif" data-original="/img/bg-es.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">ElasticSearch学习记录(五)</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span> 相关推荐</span></div><div class="relatedPosts-list"><div><a href="/posts/es-family/1/" title="ElasticSearch学习记录(一)"><img class="cover" src="/img/loading.gif" data-original="/img/bg-es.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-04-25</div><div class="title">ElasticSearch学习记录(一)</div></div></a></div><div><a href="/posts/es-family/2/" title="ElasticSearch学习记录(二)"><img class="cover" src="/img/loading.gif" data-original="/img/bg-es.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-04-25</div><div class="title">ElasticSearch学习记录(二)</div></div></a></div><div><a href="/posts/es-family/3/" title="ElasticSearch学习记录(三)"><img class="cover" src="/img/loading.gif" data-original="/img/bg-es.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-04-25</div><div class="title">ElasticSearch学习记录(三)</div></div></a></div><div><a href="/posts/es-family/4/" title="ElasticSearch学习记录(四)"><img class="cover" src="/img/loading.gif" data-original="/img/bg-es.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-04-26</div><div class="title">ElasticSearch学习记录(四)</div></div></a></div><div><a href="/posts/es-family/5/" title="ElasticSearch学习记录(五)"><img class="cover" src="/img/loading.gif" data-original="/img/bg-es.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-05-06</div><div class="title">ElasticSearch学习记录(五)</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="card-info-avatar is-center"><img class="avatar-img" src="/img/loading.gif" data-original="/img/avatar.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/><div class="author-info__name">Gao zj</div><div class="author-info__description">南风知我意，吹梦到西洲</div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">33</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">标签</div><div class="length-num">21</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://gaoairong.github.io/"><i class="iconfont icon-CSDN"></i><span>Gao zj's Blog</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="/atom.xml" target="_blank" title="RSS链接"><i class="iconfont icon-rss card_icon"></i></a><a class="social-icon" href="tencent://AddContact/?fromId=45&amp;fromSubId=1&amp;subcmd=all&amp;uin=407599698@qq.com&amp;website=www.oicqzone.com" target="_blank" title=""><i class="iconfont icon-QQ card_icon"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">博客构建中，待续...</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80%E3%80%81search-template"><span class="toc-number">1.</span> <span class="toc-text">一、search template</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%8C%E3%80%81suggest-search-completion-suggest"><span class="toc-number">2.</span> <span class="toc-text">二、suggest search(completion suggest)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E3%80%81geo-point-%E5%9C%B0%E7%90%86%E4%BD%8D%E7%BD%AE%E6%90%9C%E7%B4%A2%E5%92%8C%E8%81%9A%E5%90%88%E5%88%86%E6%9E%90"><span class="toc-number">3.</span> <span class="toc-text">三、geo point - 地理位置搜索和聚合分析</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9B%9B%E3%80%81Beats"><span class="toc-number">4.</span> <span class="toc-text">四、Beats</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BA%94%E3%80%81FileBeat%E6%98%AF%E5%A6%82%E4%BD%95%E5%B7%A5%E4%BD%9C%E7%9A%84"><span class="toc-number">5.</span> <span class="toc-text">五、FileBeat是如何工作的</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%AD-Logstash"><span class="toc-number">6.</span> <span class="toc-text">六.  Logstash</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/posts/es-family/6/" title="ElasticSearch学习记录(六)"><img src="/img/loading.gif" data-original="/img/bg-es.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="ElasticSearch学习记录(六)"/></a><div class="content"><a class="title" href="/posts/es-family/6/" title="ElasticSearch学习记录(六)">ElasticSearch学习记录(六)</a><time datetime="2021-05-12T08:19:08.000Z" title="发表于 2021-05-12 16:19:08">2021-05-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/es-family/5/" title="ElasticSearch学习记录(五)"><img src="/img/loading.gif" data-original="/img/bg-es.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="ElasticSearch学习记录(五)"/></a><div class="content"><a class="title" href="/posts/es-family/5/" title="ElasticSearch学习记录(五)">ElasticSearch学习记录(五)</a><time datetime="2021-05-06T06:21:43.000Z" title="发表于 2021-05-06 14:21:43">2021-05-06</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/es-family/4/" title="ElasticSearch学习记录(四)"><img src="/img/loading.gif" data-original="/img/bg-es.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="ElasticSearch学习记录(四)"/></a><div class="content"><a class="title" href="/posts/es-family/4/" title="ElasticSearch学习记录(四)">ElasticSearch学习记录(四)</a><time datetime="2021-04-26T12:20:39.000Z" title="发表于 2021-04-26 20:20:39">2021-04-26</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/es-family/3/" title="ElasticSearch学习记录(三)"><img src="/img/loading.gif" data-original="/img/bg-es.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="ElasticSearch学习记录(三)"/></a><div class="content"><a class="title" href="/posts/es-family/3/" title="ElasticSearch学习记录(三)">ElasticSearch学习记录(三)</a><time datetime="2021-04-25T09:12:38.000Z" title="发表于 2021-04-25 17:12:38">2021-04-25</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/es-family/2/" title="ElasticSearch学习记录(二)"><img src="/img/loading.gif" data-original="/img/bg-es.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="ElasticSearch学习记录(二)"/></a><div class="content"><a class="title" href="/posts/es-family/2/" title="ElasticSearch学习记录(二)">ElasticSearch学习记录(二)</a><time datetime="2021-04-25T06:53:19.000Z" title="发表于 2021-04-25 14:53:19">2021-04-25</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2021  <i id="heartbeat" class="fa fas fa-heartbeat"></i> Gao zj</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div><head><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/HCLonely/images@master/others/heartbeat.min.css"></head></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><div class="js-pjax"></div><script src="/js/background.js"></script><script src="/js/VolantisTags.js"></script><script type="text/javascript" src="/js/fairyDustCursor.js"></script><script defer="defer" id="fluttering_ribbon" mobile="true" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-fluttering-ribbon.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script><script>
+            window.imageLazyLoadSetting = {
+                isSPA: false,
+                preloadRatio: 1,
+                processImages: null,
+            };
+        </script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script><script>!function(n){n.imageLazyLoadSetting.processImages=o;var e=n.imageLazyLoadSetting.isSPA,i=n.imageLazyLoadSetting.preloadRatio||1,r=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));function o(){e&&(r=Array.prototype.slice.call(document.querySelectorAll("img[data-original]")));for(var t,a=0;a<r.length;a++)0<=(t=(t=r[a]).getBoundingClientRect()).bottom&&0<=t.left&&t.top<=(n.innerHeight*i||document.documentElement.clientHeight*i)&&function(){var t,e,n,i,o=r[a];t=o,e=function(){r=r.filter(function(t){return o!==t})},n=new Image,i=t.getAttribute("data-original"),n.onload=function(){t.src=i,e&&e()},t.src!==i&&(n.src=i)}()}o(),n.addEventListener("scroll",function(){var t,e;t=o,e=n,clearTimeout(t.tId),t.tId=setTimeout(function(){t.call(e)},500)})}(this);</script></body></html>

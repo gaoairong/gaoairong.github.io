@@ -6,7 +6,7 @@
   <link href="http://example.com/atom.xml" rel="self"/>
   
   <link href="http://example.com/"/>
-  <updated>2021-05-12T08:11:24.524Z</updated>
+  <updated>2021-05-12T11:22:15.663Z</updated>
   <id>http://example.com/</id>
   
   <author>
@@ -15,6 +15,29 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>ElasticSearch学习记录(六)</title>
+    <link href="http://example.com/posts/es-family/6/"/>
+    <id>http://example.com/posts/es-family/6/</id>
+    <published>2021-05-12T08:19:08.000Z</published>
+    <updated>2021-05-12T11:22:15.663Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1 id=&quot;一、search-template&quot;&gt;&lt;a href=&quot;#一、search-template&quot; class=&quot;headerlink&quot; title=&quot;一、search template&quot;&gt;&lt;/a&gt;一、search</summary>
+        
+      
+    
+    
+    
+    
+    <category term="Elasticsearch" scheme="http://example.com/tags/Elasticsearch/"/>
+    
+  </entry>
   
   <entry>
     <title>ElasticSearch学习记录(五)</title>
@@ -475,27 +498,6 @@
         
     <summary type="html">&lt;h2 id=&quot;抽象工厂模式&quot;&gt;&lt;a href=&quot;#抽象工厂模式&quot; class=&quot;headerlink&quot; title=&quot;抽象工厂模式&quot;&gt;&lt;/a&gt;抽象工厂模式&lt;/h2&gt;&lt;p&gt;Abstract Factory&lt;/p&gt;
 &lt;h3 id=&quot;模式定义&quot;&gt;&lt;a href=&quot;#模式定义&quot;</summary>
-        
-      
-    
-    
-    
-    
-  </entry>
-  
-  <entry>
-    <title>工作问题之图片设置背景图片为透明色</title>
-    <link href="http://example.com/posts/55220/"/>
-    <id>http://example.com/posts/55220/</id>
-    <published>2020-09-23T02:41:51.000Z</published>
-    <updated>2021-04-23T09:15:54.141Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;h3 id=&quot;图片切换成透明背景图&quot;&gt;&lt;a href=&quot;#图片切换成透明背景图&quot; class=&quot;headerlink&quot;</summary>
         
       
     
