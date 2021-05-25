@@ -6,7 +6,7 @@
   <link href="http://example.com/atom.xml" rel="self"/>
   
   <link href="http://example.com/"/>
-  <updated>2021-05-12T11:22:15.663Z</updated>
+  <updated>2021-05-25T08:02:40.915Z</updated>
   <id>http://example.com/</id>
   
   <author>
@@ -15,6 +15,58 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>工作问题 - Security+Oauth2密码认证方式的使用</title>
+    <link href="http://example.com/posts/13740/"/>
+    <id>http://example.com/posts/13740/</id>
+    <published>2021-05-25T07:54:21.000Z</published>
+    <updated>2021-05-25T08:02:40.915Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;blockquote&gt;
+&lt;p&gt;前言&lt;br&gt;最近工作中需要熟悉Security+Oauth2实现认证的相关代码，并写出一段代码实现调用逻辑。&lt;br&gt;于是学习了两天，特此记录，以后留用&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;figure class=&quot;highlight</summary>
+        
+      
+    
+    
+    
+    
+    <category term="Security Oauth2" scheme="http://example.com/tags/Security-Oauth2/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>微服务Gateway学习记录(一)</title>
+    <link href="http://example.com/posts/gateway-family/1/"/>
+    <id>http://example.com/posts/gateway-family/1/</id>
+    <published>2021-05-20T06:52:03.000Z</published>
+    <updated>2021-05-25T08:05:15.605Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;blockquote&gt;
+&lt;p&gt;前言：&lt;br&gt;由于最近工作比较忙，更新的频率比较慢。&lt;br&gt;最近的课程刚好学到微服务的网关Gateway，于是开始进行这一部分的学习，有关微服务前面的课程，后面会陆续补充学习记录。&lt;br&gt;概念相关，自己又想不到更好的总结，还是会引用文章和学习资料中</summary>
+        
+      
+    
+    
+    
+    
+    <category term="微服务" scheme="http://example.com/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/"/>
+    
+    <category term="Gateway" scheme="http://example.com/tags/Gateway/"/>
+    
+  </entry>
   
   <entry>
     <title>ElasticSearch学习记录(六)</title>
@@ -455,49 +507,6 @@
         
         
     <summary type="html">&lt;h2 id=&quot;原型模式&quot;&gt;&lt;a href=&quot;#原型模式&quot; class=&quot;headerlink&quot; title=&quot;原型模式&quot;&gt;&lt;/a&gt;原型模式&lt;/h2&gt;&lt;h2 id=&quot;Prototype&quot;&gt;&lt;a href=&quot;#Prototype&quot; class=&quot;headerlink&quot;</summary>
-        
-      
-    
-    
-    
-    
-  </entry>
-  
-  <entry>
-    <title>设计模式-建造者模式</title>
-    <link href="http://example.com/posts/48428/"/>
-    <id>http://example.com/posts/48428/</id>
-    <published>2020-09-23T03:50:05.000Z</published>
-    <updated>2021-04-23T09:15:54.151Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;h2 id=&quot;创造者模式&quot;&gt;&lt;a href=&quot;#创造者模式&quot; class=&quot;headerlink&quot; title=&quot;创造者模式&quot;&gt;&lt;/a&gt;创造者模式&lt;/h2&gt;&lt;h3 id=&quot;模式定义：&quot;&gt;&lt;a href=&quot;#模式定义：&quot; class=&quot;headerlink&quot;</summary>
-        
-      
-    
-    
-    
-    
-  </entry>
-  
-  <entry>
-    <title>设计模式-抽象工厂模式</title>
-    <link href="http://example.com/posts/17952/"/>
-    <id>http://example.com/posts/17952/</id>
-    <published>2020-09-23T03:02:34.000Z</published>
-    <updated>2021-04-23T09:15:54.153Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;h2 id=&quot;抽象工厂模式&quot;&gt;&lt;a href=&quot;#抽象工厂模式&quot; class=&quot;headerlink&quot; title=&quot;抽象工厂模式&quot;&gt;&lt;/a&gt;抽象工厂模式&lt;/h2&gt;&lt;p&gt;Abstract Factory&lt;/p&gt;
-&lt;h3 id=&quot;模式定义&quot;&gt;&lt;a href=&quot;#模式定义&quot;</summary>
         
       
     
